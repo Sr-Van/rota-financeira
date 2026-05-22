@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
-import { Transaction } from '../../models/transaction.type';
+import { Transaction, TransactionFilter } from '../../models/transaction.type';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,20 +12,38 @@ import { Transaction } from '../../models/transaction.type';
 export class DashboardComponent {
   private transactionService = inject(TransactionService);
 
+  filter = signal<TransactionFilter>('day');
+
+  private filteredTransactions = computed(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return this.transactionService.getByFilter(this.filter(), today);
+  });
+
   get transactions(): Transaction[] {
-    return this.transactionService.getAll();
+    return this.filteredTransactions();
   }
 
   get totalIncome(): number {
-    return this.transactionService.totalIncome();
+    return this.filteredTransactions()
+      .filter((t) => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
   }
 
   get totalExpense(): number {
-    return this.transactionService.totalExpense();
+    return this.filteredTransactions()
+      .filter((t) => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
   }
 
   get balance(): number {
-    return this.transactionService.balance();
+    return this.totalIncome - this.totalExpense;
+  }
+
+  setFilter(e: Event): void {
+    const value = (e.target as HTMLSelectElement).value;
+    if (this.isValidFilter(value)) {
+      this.filter.set(value);
+    }
   }
 
   deleteTransaction(id: string): void {
@@ -39,5 +57,9 @@ export class DashboardComponent {
   formatDate(dateStr: string): string {
     const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('pt-BR');
+  }
+
+  private isValidFilter(filter: string): filter is TransactionFilter {
+    return ['day', 'week', 'month', 'year'].includes(filter);
   }
 }

@@ -58,8 +58,9 @@ describe('DashboardComponent', () => {
   });
 
   it('should reflect transactions from service', () => {
-    transactionService.add('income', 'Corrida A', 100, '2026-05-16');
-    transactionService.add('expense', 'Gasolina', 50, '2026-05-16');
+    const today = new Date().toISOString().split('T')[0];
+    transactionService.add('income', 'Corrida A', 100, today);
+    transactionService.add('expense', 'Gasolina', 50, today);
     fixture.detectChanges();
 
     expect(component.transactions).toHaveLength(2);
@@ -69,7 +70,8 @@ describe('DashboardComponent', () => {
   });
 
   it('should delete transaction when called', () => {
-    transactionService.add('income', 'Corrida', 30, '2026-05-16');
+    const today = new Date().toISOString().split('T')[0];
+    transactionService.add('income', 'Corrida', 30, today);
     const id = transactionService.getAll()[0].id;
     component.deleteTransaction(id);
     fixture.detectChanges();
