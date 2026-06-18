@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input, booleanAttribute } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TransactionService } from '../../core/services/transaction.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { TransactionType } from '../../models/transaction.type';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-entry-form',
@@ -11,9 +12,12 @@ import { TransactionType } from '../../models/transaction.type';
   templateUrl: './entry-form.component.html',
 })
 export class EntryFormComponent {
+  @Input({ transform: booleanAttribute }) embedded = false;
+
   form: FormGroup;
   selectedType: TransactionType = 'income';
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   constructor(
     private fb: FormBuilder,
@@ -37,5 +41,6 @@ export class EntryFormComponent {
     this.transactionService.add(this.selectedType, description, parseFloat(amount), date);
     this.form.reset({ date: new Date().toISOString().split('T')[0] });
     this.toastService.show('Transacao cadastrada com sucesso.');
+    this.router.navigate(['/dashboard']);
   }
 }

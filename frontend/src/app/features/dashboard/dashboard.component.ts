@@ -1,4 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
@@ -6,7 +7,7 @@ import { Transaction, TransactionFilter } from '../../models/transaction.type';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
 import { EntryFormComponent } from './entry-form.component';
 import { TransactionService } from '../../core/services/transaction.service';
 
@@ -35,7 +35,7 @@ describe('EntryFormComponent', () => {
     mockLocalStorage.clear();
     await TestBed.configureTestingModule({
       imports: [EntryFormComponent, ReactiveFormsModule],
-      providers: [provideRouter([])],
+      providers: [provideRouter([{ path: 'dashboard', redirectTo: '', pathMatch: 'full' }])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EntryFormComponent);
