@@ -14,9 +14,14 @@ export class DashboardComponent {
   private toastService = inject(ToastService);
 
   filter = signal<TransactionFilter>('day');
+  customDate = signal<string>('');
+  showDatePicker = signal(false);
 
   private filteredTransactions = computed(() => {
     const today = new Date().toISOString().split('T')[0];
+    if (this.customDate()) {
+      return this.transactionService.getByFilter('day', this.customDate());
+    }
     return this.transactionService.getByFilter(this.filter(), today);
   });
 
@@ -40,10 +45,24 @@ export class DashboardComponent {
     return this.totalIncome - this.totalExpense;
   }
 
-  setFilter(e: Event): void {
-    const value = (e.target as HTMLSelectElement).value;
-    if (this.isValidFilter(value)) {
-      this.filter.set(value);
+  setFilter(filter: TransactionFilter): void {
+    this.filter.set(filter);
+    this.customDate.set('');
+    this.showDatePicker.set(false);
+  }
+
+  setCustomDate(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    if (value) {
+      this.customDate.set(value);
+      this.filter.set('day');
+    }
+  }
+
+  toggleDatePicker(): void {
+    this.showDatePicker.update((v) => !v);
+    if (!this.showDatePicker()) {
+      this.customDate.set('');
     }
   }
 
@@ -59,9 +78,5 @@ export class DashboardComponent {
   formatDate(dateStr: string): string {
     const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('pt-BR');
-  }
-
-  private isValidFilter(filter: string): filter is TransactionFilter {
-    return ['day', 'week', 'month', 'year'].includes(filter);
   }
 }
