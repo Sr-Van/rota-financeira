@@ -1,30 +1,30 @@
-<div class="min-h-screen bg-slate-50 p-4 md:p-6">
+<div class="min-h-screen bg-surface p-4 md:p-6">
   <div class="max-w-3xl mx-auto">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-xl font-semibold text-slate-900">Dashboard</h1>
-      <a routerLink="/entry" class="text-sm font-medium text-slate-500 hover:text-slate-900"
+      <h1 class="text-xl font-semibold text-fg">Dashboard</h1>
+      <a routerLink="/entry" class="text-sm font-medium text-fg-muted hover:text-fg"
         >Novo Lancamento</a
       >
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div class="border border-slate-200 rounded-xl bg-white p-4 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Receitas</p>
-        <p class="text-3xl font-bold tracking-tight text-emerald-600">
+      <div class="border border-line rounded-xl bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-fg-muted">Receitas</p>
+        <p class="text-3xl font-bold tracking-tight text-income">
           {{ formatCurrency(totalIncome) }}
         </p>
       </div>
-      <div class="border border-slate-200 rounded-xl bg-white p-4 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Despesas</p>
-        <p class="text-3xl font-bold tracking-tight text-rose-600">
+      <div class="border border-line rounded-xl bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-fg-muted">Despesas</p>
+        <p class="text-3xl font-bold tracking-tight text-expense">
           {{ formatCurrency(totalExpense) }}
         </p>
       </div>
-      <div class="border border-slate-200 rounded-xl bg-white p-4 shadow-sm">
-        <p class="text-sm font-medium text-slate-500">Saldo</p>
+      <div class="border border-line rounded-xl bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-fg-muted">Saldo</p>
         <p
           class="text-3xl font-bold tracking-tight"
-          [class]="balance >= 0 ? 'text-emerald-600' : 'text-rose-600'"
+          [class]="balance >= 0 ? 'text-income' : 'text-expense'"
         >
           {{ formatCurrency(balance) }}
         </p>
@@ -36,7 +36,7 @@
         name="filter"
         id="filter"
         (change)="setFilter($event)"
-        class="mb-4 text-sm rounded-md border-slate-200 text-slate-900 focus:ring-emerald-600"
+        class="mb-4 text-sm rounded-md border-line text-fg focus:ring-income"
       >
         <option value="day" selected>Hoje</option>
         <option value="week">Esta Semana</option>
@@ -45,34 +45,34 @@
       </select>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-card border border-line rounded-xl shadow-sm overflow-hidden">
       @if (transactions.length === 0) {
-        <div class="p-6 text-center text-slate-500 text-sm">
+        <div class="p-6 text-center text-fg-muted text-sm">
           Nenhum lancamento registrado ainda.
         </div>
       } @else {
         <div class="hidden md:block">
           <table class="w-full text-sm">
-            <thead class="bg-slate-50 border-b border-slate-200">
+            <thead class="bg-surface border-b border-line">
               <tr>
-                <th class="text-left px-4 py-3 font-medium text-slate-500">Data</th>
-                <th class="text-left px-4 py-3 font-medium text-slate-500">Descricao</th>
-                <th class="text-left px-4 py-3 font-medium text-slate-500">Tipo</th>
-                <th class="text-right px-4 py-3 font-medium text-slate-500">Valor</th>
+                <th class="text-left px-4 py-3 font-medium text-fg-muted">Data</th>
+                <th class="text-left px-4 py-3 font-medium text-fg-muted">Descricao</th>
+                <th class="text-left px-4 py-3 font-medium text-fg-muted">Tipo</th>
+                <th class="text-right px-4 py-3 font-medium text-fg-muted">Valor</th>
                 <th class="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
               @for (t of transactions; track t.id) {
-                <tr class="border-b border-slate-100 even:bg-slate-50">
-                  <td class="px-4 py-3 text-slate-900">{{ formatDate(t.date) }}</td>
-                  <td class="px-4 py-3 text-slate-900">{{ t.description }}</td>
+                <tr class="border-b border-line-light even:bg-card-alt">
+                  <td class="px-4 py-3 text-fg">{{ formatDate(t.date) }}</td>
+                  <td class="px-4 py-3 text-fg">{{ t.description }}</td>
                   <td class="px-4 py-3">
                     <span
                       [class]="
                         t.type === 'income'
-                          ? 'text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md text-xs font-medium'
-                          : 'text-rose-600 bg-rose-50 px-2 py-1 rounded-md text-xs font-medium'
+                          ? 'text-income bg-income-bg px-2 py-1 rounded-md text-xs font-medium'
+                          : 'text-expense bg-expense-bg px-2 py-1 rounded-md text-xs font-medium'
                       "
                     >
                       {{ t.type === 'income' ? 'Entrada' : 'Saida' }}
@@ -80,14 +80,14 @@
                   </td>
                   <td
                     class="px-4 py-3 text-right font-medium"
-                    [class]="t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'"
+                    [class]="t.type === 'income' ? 'text-income' : 'text-expense'"
                   >
                     {{ t.type === 'income' ? '+' : '-' }} {{ formatCurrency(t.amount) }}
                   </td>
                   <td class="px-4 py-3 text-right">
                     <button
                       (click)="deleteTransaction(t.id)"
-                      class="text-slate-500 hover:text-rose-600 text-xs font-medium"
+                      class="text-fg-muted hover:text-expense text-xs font-medium"
                     >
                       Excluir
                     </button>
@@ -98,32 +98,32 @@
           </table>
         </div>
 
-        <div class="md:hidden divide-y divide-slate-100">
+        <div class="md:hidden divide-y divide-line-light">
           @for (t of transactions; track t.id) {
-            <div class="p-4 even:bg-slate-50">
+            <div class="p-4 even:bg-card-alt">
               <div class="flex items-center justify-between mb-1">
                 <span
                   [class]="
                     t.type === 'income'
-                      ? 'text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md text-xs font-medium'
-                      : 'text-rose-600 bg-rose-50 px-2 py-1 rounded-md text-xs font-medium'
+                      ? 'text-income bg-income-bg px-2 py-1 rounded-md text-xs font-medium'
+                      : 'text-expense bg-expense-bg px-2 py-1 rounded-md text-xs font-medium'
                   "
                 >
                   {{ t.type === 'income' ? 'Entrada' : 'Saida' }}
                 </span>
                 <span
                   class="font-medium"
-                  [class]="t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'"
+                  [class]="t.type === 'income' ? 'text-income' : 'text-expense'"
                 >
                   {{ t.type === 'income' ? '+' : '-' }} {{ formatCurrency(t.amount) }}
                 </span>
               </div>
-              <p class="text-sm text-slate-900">{{ t.description }}</p>
+              <p class="text-sm text-fg">{{ t.description }}</p>
               <div class="flex items-center justify-between mt-1">
-                <span class="text-xs text-slate-500">{{ formatDate(t.date) }}</span>
+                <span class="text-xs text-fg-muted">{{ formatDate(t.date) }}</span>
                 <button
                   (click)="deleteTransaction(t.id)"
-                  class="text-slate-500 hover:text-rose-600 text-xs font-medium"
+                  class="text-fg-muted hover:text-expense text-xs font-medium"
                 >
                   Excluir
                 </button>

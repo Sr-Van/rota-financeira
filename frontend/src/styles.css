@@ -1,3 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@theme {
+  --color-surface: #E1DCC9;
+  --color-card: #FFFFFF;
+  --color-card-alt: #F5F3EF;
+  --color-fg: #1F150C;
+  --color-fg-muted: #412D15;
+  --color-line: #D4CFC0;
+  --color-line-light: #EBE6D6;
+  --color-income: #2D6A4F;
+  --color-income-bg: #D8EDE4;
+  --color-income-hover: #1B4D37;
+  --color-income-disabled: #A8CBB8;
+  --color-expense: #A4332D;
+  --color-expense-bg: #F0DAD8;
+  --color-expense-hover: #832823;
+  --color-expense-disabled: #D9B4B0;
+  --color-alert: #B8860B;
+  --color-alert-bg: #F5EBC4;
+  --color-focus: #412D15;
+}
