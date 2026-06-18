@@ -1,16 +1,17 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
   private transactionService = inject(TransactionService);
+  private toastService = inject(ToastService);
 
   filter = signal<TransactionFilter>('day');
 
@@ -48,6 +49,7 @@ export class DashboardComponent {
 
   deleteTransaction(id: string): void {
     this.transactionService.delete(id);
+    this.toastService.show('Transacao excluida com sucesso.');
   }
 
   formatCurrency(value: number): string {
