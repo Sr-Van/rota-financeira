@@ -1,0 +1,377 @@
+<section class="min-h-screen bg-surface p-4 pb-20 md:p-6 md:pb-40">
+  <div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-xl font-semibold text-fg">Custos do Veiculo</h1>
+      <p class="text-sm text-fg-muted mt-1">
+        Configure todos os custos do seu veiculo, metas mensais e parametros de consumo.
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+          Custos Fixos do Veiculo
+        </h2>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1">
+            Parcela do Veiculo (R$/mes)
+          </label>
+          <input
+            type="number"
+            formControlName="vehicleInstallment"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="0,00"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('vehicleInstallment')?.touched && form.get('vehicleInstallment')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Seguro (R$/mes) </label>
+          <input
+            type="number"
+            formControlName="insurance"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="0,00"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          <small class="text-fg-muted text-xs">
+            Divida o valor total do seguro por 12 para obter o valor mensal caso pague anualmente.
+          </small>
+          @if (form.get('insurance')?.touched && form.get('insurance')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> IPVA (R$/ano) </label>
+          <input
+            type="number"
+            formControlName="ipva"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="0,00"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('ipva')?.touched && form.get('ipva')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+      </div>
+
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">Planejamento Mensal</h2>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Dias Trabalhados (por mes) </label>
+          <input
+            type="number"
+            formControlName="daysWorked"
+            inputmode="numeric"
+            step="1"
+            min="1"
+            max="31"
+            placeholder="Ex: 22"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('daysWorked')?.touched && form.get('daysWorked')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor entre 1 e 31.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> KM Estimada (por mes) </label>
+          <input
+            type="number"
+            formControlName="estimatedKm"
+            inputmode="numeric"
+            step="1"
+            min="1"
+            placeholder="Ex: 3000"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('estimatedKm')?.touched && form.get('estimatedKm')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe uma quilometragem valida maior que zero.</p>
+          }
+        </div>
+      </div>
+
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+          Consumo &amp; Combustivel
+        </h2>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Preco do Litro (R$) </label>
+          <input
+            type="number"
+            formControlName="fuelPrice"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="Ex: 5,89"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('fuelPrice')?.touched && form.get('fuelPrice')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Consumo Medio (km/l) </label>
+          <input
+            type="number"
+            formControlName="fuelConsumption"
+            inputmode="decimal"
+            step="0.1"
+            min="0.1"
+            placeholder="Ex: 12,5"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('fuelConsumption')?.touched && form.get('fuelConsumption')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um consumo valido maior que zero.</p>
+          }
+        </div>
+      </div>
+
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+          Desgaste a Longo Prazo
+        </h2>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Custo da Revisao (R$) </label>
+          <input
+            type="number"
+            formControlName="reviewCost"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="Ex: 500"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('reviewCost')?.touched && form.get('reviewCost')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Intervalo da Revisao (km) </label>
+          <input
+            type="number"
+            formControlName="reviewInterval"
+            inputmode="numeric"
+            step="1"
+            min="1"
+            placeholder="Padrao: 10000"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          <small class="text-fg-muted text-xs">Padrao: 10.000 km (troca de oleo e filtros).</small>
+          @if (form.get('reviewInterval')?.touched && form.get('reviewInterval')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um intervalo valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Jogo de Pneus (R$) </label>
+          <input
+            type="number"
+            formControlName="tireCost"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="Ex: 2000"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('tireCost')?.touched && form.get('tireCost')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Durabilidade dos Pneus (km) </label>
+          <input
+            type="number"
+            formControlName="tireLongevity"
+            inputmode="numeric"
+            step="1"
+            min="1"
+            placeholder="Padrao: 60000"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          <small class="text-fg-muted text-xs">Padrao: 60.000 km.</small>
+          @if (form.get('tireLongevity')?.touched && form.get('tireLongevity')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe uma durabilidade valida maior que zero.</p>
+          }
+        </div>
+      </div>
+
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+          Meta Financeira &amp; Reserva
+        </h2>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Salario Liquido Desejado (R$/mes) </label>
+          <input
+            type="number"
+            formControlName="desiredSalary"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="0,00"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          @if (form.get('desiredSalary')?.touched && form.get('desiredSalary')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-fg mb-1"> Reserva para Oficina (R$/mes) </label>
+          <input
+            type="number"
+            formControlName="maintenanceReserve"
+            inputmode="decimal"
+            step="0.01"
+            min="0.01"
+            placeholder="Ex: 200"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+          <small class="text-fg-muted text-xs">
+            Valor medio mensal reservado para manutencao corretiva.
+          </small>
+          @if (form.get('maintenanceReserve')?.touched && form.get('maintenanceReserve')?.invalid) {
+            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+          }
+        </div>
+      </div>
+
+      @if (dailyCosts && fixedCostPerKm && variableCostsPerKm && combinedCosts) {
+        <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+          <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+            Custos Diarios
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-card-alt rounded-lg p-3">
+              <p class="text-xs text-fg-muted">Parcela/dia</p>
+              <p class="text-lg font-bold text-fg">
+                {{ formatCurrency(dailyCosts.dailyInstallment) }}
+              </p>
+            </div>
+            <div class="bg-card-alt rounded-lg p-3">
+              <p class="text-xs text-fg-muted">Seguro/dia</p>
+              <p class="text-lg font-bold text-fg">
+                {{ formatCurrency(dailyCosts.dailyInsurance) }}
+              </p>
+            </div>
+            <div class="bg-card-alt rounded-lg p-3">
+              <p class="text-xs text-fg-muted">IPVA/dia</p>
+              <p class="text-lg font-bold text-fg">{{ formatCurrency(dailyCosts.dailyIpva) }}</p>
+            </div>
+          </div>
+
+          <div class="border-t border-line-light pt-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-fg">Custo Fixo Diario Total</span>
+              <span class="text-lg font-bold text-income">{{
+                formatCurrency(dailyCosts.totalDaily)
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+          <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+            Custo por KM Rodado
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-card-alt rounded-lg p-3">
+              <p class="text-xs text-fg-muted">Custo Fixo Total/Mes</p>
+              <p class="text-lg font-bold text-fg">
+                {{ formatCurrency(fixedCostPerKm.monthlyTotal) }}
+              </p>
+            </div>
+            <div class="bg-card-alt rounded-lg p-3">
+              <p class="text-xs text-fg-muted">Custo Fixo/km</p>
+              <p class="text-lg font-bold text-fg">
+                {{ formatCurrency(fixedCostPerKm.costPerKm) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-line-light pt-3">
+            <h3 class="text-xs font-semibold text-fg uppercase tracking-wider mb-3">
+              Custos Variaveis por KM
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="bg-card-alt rounded-lg p-3">
+                <p class="text-xs text-fg-muted">Combustivel/km</p>
+                <p class="text-lg font-bold text-fg">
+                  {{ formatCurrency(variableCostsPerKm.fuelCostPerKm) }}
+                </p>
+              </div>
+              <div class="bg-card-alt rounded-lg p-3">
+                <p class="text-xs text-fg-muted">Revisao/km</p>
+                <p class="text-lg font-bold text-fg">
+                  {{ formatCurrency(variableCostsPerKm.reviewCostPerKm) }}
+                </p>
+              </div>
+              <div class="bg-card-alt rounded-lg p-3">
+                <p class="text-xs text-fg-muted">Pneus/km</p>
+                <p class="text-lg font-bold text-fg">
+                  {{ formatCurrency(variableCostsPerKm.tireCostPerKm) }}
+                </p>
+              </div>
+              <div class="bg-card-alt rounded-lg p-3">
+                <p class="text-xs text-fg-muted">Manutencao/km</p>
+                <p class="text-lg font-bold text-fg">
+                  {{ formatCurrency(variableCostsPerKm.maintenanceCostPerKm) }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-line-light pt-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-fg">Custo Fixo/km</span>
+              <span class="text-base font-semibold text-fg">{{
+                formatCurrency(combinedCosts.fixedCostPerKm)
+              }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-fg">Custo Variavel/km</span>
+              <span class="text-base font-semibold text-fg">{{
+                formatCurrency(combinedCosts.variableCostPerKm)
+              }}</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-line-light pt-2">
+              <span class="text-sm font-bold text-fg">Custo Total/km</span>
+              <span class="text-lg font-bold text-income">{{
+                formatCurrency(combinedCosts.totalCostPerKm)
+              }}</span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="cursor-pointer w-full py-3 px-4 rounded-xl text-sm font-medium text-white bg-income hover:bg-income-hover disabled:bg-income-disabled transition-colors"
+      >
+        Salvar Configuracoes
+      </button>
+    </form>
+  </div>
+</section>

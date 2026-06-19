@@ -1,7 +1,19 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Transaction, TransactionFilter, TransactionType } from '../../models/transaction.type';
+import {
+  DriverConfig,
+  DailyCosts,
+  FixedCostPerKm,
+  VariableCostsPerKm,
+  CombinedCosts,
+} from '../../models/driver-config.type';
 
 const STORAGE_KEY = 'rota-financeira-transactions';
+const CONFIG_STORAGE_KEY = 'rota-financeira-driver-config';
+
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
+}
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
@@ -83,5 +95,58 @@ export class TransactionService {
 
   private saveToStorage(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.transactions()));
+  }
+
+  saveConfig(config: DriverConfig): void {
+    localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+  }
+
+  getConfig(): DriverConfig | null {
+    try {
+      const data = localStorage.getItem(CONFIG_STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  calculateDailyCosts(config: DriverConfig): DailyCosts {
+    const dailyInstallment = round(config.vehicleInstallment / config.daysWorked);
+    const dailyInsurance = round(config.insurance / config.daysWorked);
+    const dailyIpva = round(config.ipva / 12 / config.daysWorked);
+    const totalDaily = round(dailyInstallment + dailyInsurance + dailyIpva);
+    const dailyPerKm = round(totalDaily / (config.estimatedKm / config.daysWorked));
+    return { dailyInstallment, dailyInsurance, dailyIpva, totalDaily, dailyPerKm };
+  }
+
+  calculateFixedCostPerKm(config: DriverConfig): FixedCostPerKm {
+    const monthlyTotal = round(config.vehicleInstallment + config.insurance + config.ipva / 12);
+    const costPerKm = round(monthlyTotal / config.estimatedKm);
+    return { monthlyTotal, costPerKm };
+  }
+
+  calculateVariableCostsPerKm(config: DriverConfig): VariableCostsPerKm {
+    const fuelCostPerKm = round(config.fuelPrice / config.fuelConsumption);
+    const reviewCostPerKm = round(config.reviewCost / config.reviewInterval);
+    const tireCostPerKm = round(config.tireCost / config.tireLongevity);
+    const maintenanceCostPerKm = round(config.maintenanceReserve / config.estimatedKm);
+    const totalVariableCostPerKm = round(
+      fuelCostPerKm + reviewCostPerKm + tireCostPerKm + maintenanceCostPerKm,
+    );
+    return {
+      fuelCostPerKm,
+      reviewCostPerKm,
+      tireCostPerKm,
+      maintenanceCostPerKm,
+      totalVariableCostPerKm,
+    };
+  }
+
+  calculateCombinedCosts(fixed: FixedCostPerKm, variable: VariableCostsPerKm): CombinedCosts {
+    return {
+      fixedCostPerKm: fixed.costPerKm,
+      variableCostPerKm: variable.totalVariableCostPerKm,
+      totalCostPerKm: round(fixed.costPerKm + variable.totalVariableCostPerKm),
+    };
   }
 }
