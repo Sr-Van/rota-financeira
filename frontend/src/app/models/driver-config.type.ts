@@ -1,4 +1,7 @@
+export type VehicleType = 'combustion' | 'electric';
+
 export interface DriverConfig {
+  vehicleType: VehicleType;
   vehicleInstallment: number;
   insurance: number;
   ipva: number;
@@ -7,6 +10,10 @@ export interface DriverConfig {
   desiredSalary: number;
   fuelPrice: number;
   fuelConsumption: number;
+  batteryCapacity: number;
+  totalAutonomy: number;
+  kwhPrice: number;
+  gasolinePrice: number;
   reviewCost: number;
   reviewInterval: number;
   tireCost: number;
@@ -33,6 +40,7 @@ export interface VariableCostsPerKm {
   tireCostPerKm: number;
   maintenanceCostPerKm: number;
   totalVariableCostPerKm: number;
+  kmPerLiterEquivalent?: number;
 }
 
 export interface CombinedCosts {

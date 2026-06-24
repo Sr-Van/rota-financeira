@@ -6,6 +6,7 @@ import {
   FixedCostPerKm,
   VariableCostsPerKm,
   CombinedCosts,
+  VehicleType,
 } from '../../models/driver-config.type';
 
 const STORAGE_KEY = 'rota-financeira-transactions';
@@ -126,7 +127,16 @@ export class TransactionService {
   }
 
   calculateVariableCostsPerKm(config: DriverConfig): VariableCostsPerKm {
-    const fuelCostPerKm = round(config.fuelPrice / config.fuelConsumption);
+    let fuelCostPerKm: number;
+    let kmPerLiterEquivalent: number | undefined;
+
+    if (config.vehicleType === 'electric') {
+      fuelCostPerKm = round((config.batteryCapacity / config.totalAutonomy) * config.kwhPrice);
+      kmPerLiterEquivalent = this.calculateKmPerLiterEquivalent(fuelCostPerKm, config.gasolinePrice);
+    } else {
+      fuelCostPerKm = round(config.fuelPrice / config.fuelConsumption);
+    }
+
     const reviewCostPerKm = round(config.reviewCost / config.reviewInterval);
     const tireCostPerKm = round(config.tireCost / config.tireLongevity);
     const maintenanceCostPerKm = round(config.maintenanceReserve / config.estimatedKm);
@@ -139,7 +149,16 @@ export class TransactionService {
       tireCostPerKm,
       maintenanceCostPerKm,
       totalVariableCostPerKm,
+      ...(kmPerLiterEquivalent !== undefined && { kmPerLiterEquivalent }),
     };
+  }
+
+  calculateKmPerLiterEquivalent(fuelCostPerKm: number, gasolinePrice: number): number {
+    if (!gasolinePrice || gasolinePrice <= 0) return 0;
+    const costPer100km = fuelCostPerKm * 100;
+    const equivalentLiters = costPer100km / gasolinePrice;
+    if (equivalentLiters <= 0) return 0;
+    return round(100 / equivalentLiters);
   }
 
   calculateCombinedCosts(fixed: FixedCostPerKm, variable: VariableCostsPerKm): CombinedCosts {
@@ -148,5 +167,13 @@ export class TransactionService {
       variableCostPerKm: variable.totalVariableCostPerKm,
       totalCostPerKm: round(fixed.costPerKm + variable.totalVariableCostPerKm),
     };
+  }
+
+  calculateMinimumGainPerKm(totalCostPerKm: number): number {
+    return round(totalCostPerKm / 0.5);
+  }
+
+  calculateIdealGainPerKm(totalCostPerKm: number): number {
+    return round(totalCostPerKm / 0.4);
   }
 }

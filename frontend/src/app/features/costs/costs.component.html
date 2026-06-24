@@ -8,6 +8,38 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm">
+        <label class="block text-sm font-medium text-fg mb-3">Qual o tipo do seu veiculo?</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            (click)="setVehicleType('combustion')"
+            [class.bg-income]="vehicleType === 'combustion'"
+            [class.bg-card]="vehicleType !== 'combustion'"
+            [class.text-white]="vehicleType === 'combustion'"
+            [class.text-fg]="vehicleType !== 'combustion'"
+            [class.border-income]="vehicleType === 'combustion'"
+            [class.border-line]="vehicleType !== 'combustion'"
+            class="p-3 rounded-xl border text-sm font-medium transition-colors cursor-pointer"
+          >
+            Combustao
+          </button>
+          <button
+            type="button"
+            (click)="setVehicleType('electric')"
+            [class.bg-income]="vehicleType === 'electric'"
+            [class.bg-card]="vehicleType !== 'electric'"
+            [class.text-white]="vehicleType === 'electric'"
+            [class.text-fg]="vehicleType !== 'electric'"
+            [class.border-income]="vehicleType === 'electric'"
+            [class.border-line]="vehicleType !== 'electric'"
+            class="p-3 rounded-xl border text-sm font-medium transition-colors cursor-pointer"
+          >
+            Eletrico
+          </button>
+        </div>
+      </div>
+
       <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
         <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
           Custos Fixos do Veiculo
@@ -104,43 +136,118 @@
         </div>
       </div>
 
-      <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
-        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
-          Consumo &amp; Combustivel
-        </h2>
+      @if (vehicleType === 'combustion') {
+        <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+          <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+            Consumo &amp; Combustivel
+          </h2>
 
-        <div>
-          <label class="block text-sm font-medium text-fg mb-1"> Preco do Litro (R$) </label>
-          <input
-            type="number"
-            formControlName="fuelPrice"
-            inputmode="decimal"
-            step="0.01"
-            min="0.01"
-            placeholder="Ex: 5,89"
-            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-          />
-          @if (form.get('fuelPrice')?.touched && form.get('fuelPrice')?.invalid) {
-            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
-          }
-        </div>
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Preco do Litro (R$) </label>
+            <input
+              type="number"
+              formControlName="fuelPrice"
+              inputmode="decimal"
+              step="0.01"
+              min="0.01"
+              placeholder="Ex: 5,89"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('fuelPrice')?.touched && form.get('fuelPrice')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+            }
+          </div>
 
-        <div>
-          <label class="block text-sm font-medium text-fg mb-1"> Consumo Medio (km/l) </label>
-          <input
-            type="number"
-            formControlName="fuelConsumption"
-            inputmode="decimal"
-            step="0.1"
-            min="0.1"
-            placeholder="Ex: 12,5"
-            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-          />
-          @if (form.get('fuelConsumption')?.touched && form.get('fuelConsumption')?.invalid) {
-            <p class="text-expense text-xs mt-1">Informe um consumo valido maior que zero.</p>
-          }
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Consumo Medio (km/l) </label>
+            <input
+              type="number"
+              formControlName="fuelConsumption"
+              inputmode="decimal"
+              step="0.1"
+              min="0.1"
+              placeholder="Ex: 12,5"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('fuelConsumption')?.touched && form.get('fuelConsumption')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um consumo valido maior que zero.</p>
+            }
+          </div>
         </div>
-      </div>
+      } @else {
+        <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
+          <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+            Consumo &amp; Energia
+          </h2>
+
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Capacidade da Bateria (kWh) </label>
+            <input
+              type="number"
+              formControlName="batteryCapacity"
+              inputmode="decimal"
+              step="0.1"
+              min="0.1"
+              placeholder="Ex: 50"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('batteryCapacity')?.touched && form.get('batteryCapacity')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe uma capacidade valida maior que zero.</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Autonomia Total com 100% de carga (km) </label>
+            <input
+              type="number"
+              formControlName="totalAutonomy"
+              inputmode="numeric"
+              step="1"
+              min="1"
+              placeholder="Ex: 350"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('totalAutonomy')?.touched && form.get('totalAutonomy')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe uma autonomia valida maior que zero.</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Preco do kWh (R$) </label>
+            <input
+              type="number"
+              formControlName="kwhPrice"
+              inputmode="decimal"
+              step="0.01"
+              min="0.01"
+              placeholder="Ex: 0,95"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('kwhPrice')?.touched && form.get('kwhPrice')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um preco valido maior que zero.</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1"> Preco da Gasolina na regiao (R$) </label>
+            <input
+              type="number"
+              formControlName="gasolinePrice"
+              inputmode="decimal"
+              step="0.01"
+              min="0.01"
+              placeholder="Ex: 6,19"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            <small class="text-fg-muted text-xs">
+              Utilizado para calcular o consumo equivalente (km/le).
+            </small>
+            @if (form.get('gasolinePrice')?.touched && form.get('gasolinePrice')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
+            }
+          </div>
+        </div>
+      }
 
       <div class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
         <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
@@ -316,7 +423,7 @@
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="bg-card-alt rounded-lg p-3">
-                <p class="text-xs text-fg-muted">Combustivel/km</p>
+                <p class="text-xs text-fg-muted">{{ fuelLabel[vehicleType] }}</p>
                 <p class="text-lg font-bold text-fg">
                   {{ formatCurrency(variableCostsPerKm.fuelCostPerKm) }}
                 </p>
@@ -373,5 +480,71 @@
         Salvar Configuracoes
       </button>
     </form>
+
+    <div class="mt-6">
+      <button
+        type="button"
+        (click)="generateKmIdeal()"
+        [disabled]="form.invalid || !combinedCosts"
+        class="cursor-pointer w-full py-3 px-4 rounded-xl text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-50"
+        style="background-color: #B8860B;"
+      >
+        Gerar KM Ideal
+      </button>
+    </div>
+
+    @if (showResults && minimumGainPerKm !== null && idealGainPerKm !== null) {
+      <div class="mt-6 bg-card border border-line rounded-xl p-4 shadow-sm space-y-4 transition-all duration-300">
+        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
+          Painel de Resultados Financeiros
+        </h2>
+
+        @if (vehicleType === 'electric' && variableCostsPerKm?.kmPerLiterEquivalent) {
+          <div class="bg-income-bg border border-income rounded-lg p-3 flex items-center gap-3">
+            <span class="text-2xl">&#9889;</span>
+            <div>
+              <p class="text-xs text-fg-muted">Consumo Equivalente</p>
+              <p class="text-lg font-bold text-income">
+                {{ variableCostsPerKm!.kmPerLiterEquivalent }} km/l<sub>e</sub>
+              </p>
+              <p class="text-xs text-fg-muted">
+                Sua eficiencia e de {{ variableCostsPerKm!.kmPerLiterEquivalent }} km/l equivalente
+              </p>
+            </div>
+          </div>
+        }
+
+        <div class="bg-card-alt rounded-lg p-3">
+          <p class="text-xs text-fg-muted">Custo Real Atual por KM</p>
+          <p class="text-2xl font-bold text-fg">
+            {{ combinedCosts!.totalCostPerKm | currency:'BRL' }}
+          </p>
+        </div>
+
+        <div class="border-t border-line-light pt-3">
+          <div class="bg-alert-bg rounded-lg p-3 border border-alert">
+            <p class="text-xs text-fg-muted">Ganho Minimo por KM (Custo a 50%)</p>
+            <p class="text-2xl font-bold" style="color: #B8860B;">
+              {{ minimumGainPerKm | currency:'BRL' }}
+            </p>
+            <p class="text-xs mt-1 text-fg-muted">
+              Margem de 50% de lucro liquido sobre o custo total
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-income-bg rounded-lg p-3 border-2" style="border-color: #2D6A4F;">
+            <p class="text-xs text-fg-muted">Ganho Ideal / Numero Magico (Custo a 40%)</p>
+            <p class="text-3xl font-bold tracking-tight text-income">
+              {{ idealGainPerKm | currency:'BRL' }}
+            </p>
+            <p class="text-xs mt-1 text-fg-muted">
+              Meta para obter 60% de lucro liquido e eficiencia fiscal
+            </p>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 </section>
