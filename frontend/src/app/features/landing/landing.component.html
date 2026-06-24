@@ -1,0 +1,468 @@
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-fg focus:text-white focus:rounded-lg">
+  Pular para o conteudo principal
+</a>
+
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-b border-line-light">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <span class="text-xl font-extrabold tracking-tight text-fg">Rota Financeira</span>
+    <a
+      href="#precos"
+      class="inline-flex items-center gap-2 bg-fg text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 focus:ring-offset-surface"
+      (click)="scrollTo('precos'); $event.preventDefault()"
+    >
+      Assinar agora
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <!-- ====== HERO ====== -->
+  <section class="pt-28 pb-20 sm:pt-36 sm:pb-28 px-5 overflow-hidden">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      <div class="flex-1 text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 bg-income-bg text-income text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+          <span class="w-2 h-2 rounded-full bg-income animate-pulse"></span>
+          Controle financeiro inteligente
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-fg">
+          Descubra quanto<br class="hidden sm:block" />
+          <span class="ml-2 md:ml-0 text-income">voce realmente ganha</span><br />
+          por hora na roda
+        </h1>
+        <p class="mt-5 text-lg sm:text-xl text-fg-muted leading-relaxed max-w-xl mx-auto lg:mx-0">
+          O Rota Financeira e a ferramenta que mostra seu lucro real, custo por km e se o jogo esta valendo a pena. Chega de achar que esta ganhando bem.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+          <a
+            href="#precos"
+            class="w-full sm:w-auto text-center bg-income text-white text-base font-bold px-8 py-3.5 rounded-xl hover:bg-income-hover transition-all shadow-lg shadow-income/20 focus:outline-none focus:ring-2 focus:ring-income focus:ring-offset-2 focus:ring-offset-surface"
+            (click)="scrollTo('precos'); $event.preventDefault()"
+          >
+            COMECAR GRATIS — R$ 1,00/mes
+          </a>
+          <a
+            href="#funciona"
+            class="w-full sm:w-auto text-center text-fg-muted font-semibold px-8 py-3.5 rounded-xl border-2 border-line hover:border-fg-muted transition-all focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2 focus:ring-offset-surface"
+            (click)="scrollTo('funciona'); $event.preventDefault()"
+          >
+            Como funciona
+          </a>
+        </div>
+        <div class="mt-6 flex flex-col md:flex-row items-center gap-6 justify-center lg:justify-start text-sm text-fg-muted">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-income" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            Sem burocracia
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-income" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            Cancele quando quiser
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-income" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            Dashboard completo
+          </span>
+        </div>
+      </div>
+      <div class="flex-1 flex justify-center lg:justify-end">
+        <div class="relative w-full max-w-md">
+          <div class="absolute -inset-4 bg-income/5 rounded-3xl blur-3xl"></div>
+          <div class="relative bg-card rounded-2xl border border-line shadow-xl p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-sm font-semibold text-fg-muted">Resumo de hoje</span>
+              <span class="text-xs font-medium text-income bg-income-bg px-2.5 py-1 rounded-full">AO VIVO</span>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between pb-4 border-b border-line-light">
+                <span class="text-sm text-fg-muted">Receita bruta</span>
+                <span class="text-xl font-bold text-income">R$ 287,00</span>
+              </div>
+              <div class="flex items-center justify-between pb-4 border-b border-line-light">
+                <span class="text-sm text-fg-muted">Despesas (combustivel + alimentacao)</span>
+                <span class="text-xl font-bold text-expense">- R$ 89,00</span>
+              </div>
+              <div class="flex items-center justify-between pb-4 border-b border-line-light">
+                <span class="text-sm text-fg-muted">Km rodados</span>
+                <span class="text-xl font-bold text-fg">124 km</span>
+              </div>
+              <div class="flex items-center justify-between pt-1">
+                <span class="text-sm font-semibold text-fg">Lucro por hora</span>
+                <span class="text-2xl font-black text-income">R$ 28,60<span class="text-base font-semibold">/h</span></span>
+              </div>
+            </div>
+            <div class="mt-5 pt-4 border-t border-line-light flex items-center gap-2 text-xs text-fg-muted">
+              <svg class="w-3.5 h-3.5 text-income" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Dados simulados para ilustracao
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== EXPLANATION ====== -->
+  <section id="funciona" class="bg-card py-20 sm:py-28 px-5 clip-diagonal">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-income font-semibold text-sm tracking-widest uppercase">Como funciona</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-fg mt-3">
+          Seu negocio sobre rodas merece<br class="hidden sm:block" />
+          <span class="text-income">controle de verdade</span>
+        </h2>
+        <p class="text-lg text-fg-muted mt-4 leading-relaxed">
+          Motorista de app nao e so um trabalhador — voce e dono do seu negocio. Mas sem controle financeiro,
+          e impossivel saber se o lucro real esta valendo a pena. O Rota Financeira foi feito pra isso.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 border border-line hover:shadow-lg hover:shadow-fg/5 transition-all">
+          <div class="w-12 h-12 bg-income-bg rounded-xl flex items-center justify-center mb-5">
+            <span class="text-income font-black text-lg">01</span>
+          </div>
+          <h3 class="text-xl font-bold text-fg mb-3">Lance suas corridas</h3>
+          <p class="text-fg-muted leading-relaxed">
+            Registre receitas, quilometragem e horas trabalhadas em segundos. Interface feita pra usar com uma mao no volante.
+          </p>
+        </div>
+
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 border border-line hover:shadow-lg hover:shadow-fg/5 transition-all">
+          <div class="w-12 h-12 bg-expense-bg rounded-xl flex items-center justify-center mb-5">
+            <span class="text-expense font-black text-lg">02</span>
+          </div>
+          <h3 class="text-xl font-bold text-fg mb-3">Registre seus gastos</h3>
+          <p class="text-fg-muted leading-relaxed">
+            Combustivel, alimentacao, manutencao, taxas das plataformas. Cada centavo importa pra calcular seu lucro real.
+          </p>
+        </div>
+
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 border border-line hover:shadow-lg hover:shadow-fg/5 transition-all sm:col-span-2 lg:col-span-1">
+          <div class="w-12 h-12 bg-alert-bg rounded-xl flex items-center justify-center mb-5">
+            <span class="text-alert font-black text-lg">03</span>
+          </div>
+          <h3 class="text-xl font-bold text-fg mb-3">Descubra insights</h3>
+          <p class="text-fg-muted leading-relaxed">
+            Veja no dashboard seu lucro por hora, custo por km, ponto de equilibrio e alertas de consumo de combustivel.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-16 bg-fg rounded-2xl p-8 sm:p-12 text-center">
+        <blockquote class="text-white/80 text-lg sm:text-xl italic leading-relaxed max-w-3xl mx-auto">
+          "Eu achava que tirava R$ 35 por hora. Depois que comecei a registrar tudo no Rota Financeira,
+          descobri que meu lucro real era R$ 18. Consegui ajustar minha rota e hoje saquei para R$ 32."
+        </blockquote>
+        <div class="mt-6 flex items-center justify-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-income-bg flex items-center justify-center text-income font-bold text-sm">C</div>
+          <div class="text-left">
+            <span class="block text-white font-semibold text-sm">Carlos M.</span>
+            <span class="block text-white/50 text-xs">Motorista desde 2021</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== METRICAS ====== -->
+  <section class="bg-surface py-16 sm:py-20 px-5 clip-diagonal-reverse -mt-2">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+        <div class="text-center">
+          <span class="text-3xl sm:text-4xl font-black text-fg">3.200+</span>
+          <span class="block text-sm text-fg-muted mt-1 font-medium">Motoristas ativos</span>
+        </div>
+        <div class="text-center">
+          <span class="text-3xl sm:text-4xl font-black text-income">R$ 18M+</span>
+          <span class="block text-sm text-fg-muted mt-1 font-medium">Em corridas registradas</span>
+        </div>
+        <div class="text-center">
+          <span class="text-3xl sm:text-4xl font-black text-fg">4.8</span>
+          <span class="block text-sm text-fg-muted mt-1 font-medium">Avaliacao media</span>
+        </div>
+        <div class="text-center">
+          <span class="text-3xl sm:text-4xl font-black text-alert">12%</span>
+          <span class="block text-sm text-fg-muted mt-1 font-medium">Aumento medio no lucro</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DORES ====== -->
+  <section class="bg-card py-20 sm:py-28 px-5">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-expense font-semibold text-sm tracking-widest uppercase">A real do dia a dia</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-fg mt-3">
+          Voce se identifica com<br class="hidden sm:block" />
+          <span class="ml-2 text-expense">alguma dessas?</span>
+        </h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-expense-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-expense" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Falta de clareza no lucro</h3>
+            <p class="text-sm text-fg-muted mt-1">Voce sabe exatamente quanto esta ganhando por hora depois de descontar todos os custos?</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-expense-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-expense" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Gastos que fogem do controle</h3>
+            <p class="text-sm text-fg-muted mt-1">Combustivel, alimentacao, manutencao... Os custos somem e voce so ve o estrago no fim do mes.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-expense-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-expense" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Sem tempo para organizar</h3>
+            <p class="text-sm text-fg-muted mt-1">Depois de 12 horas na direcao, a ultima coisa que voce quer e planilha e calculadora.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-expense-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-expense" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Taxas que corroem o ganho</h3>
+            <p class="text-sm text-fg-muted mt-1">Uber, 99 e outras plataformas ficam com uma parte. Sabe quanto esta sobrando de verdade?</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-expense-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-expense" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Sem nocao do custo por km</h3>
+            <p class="text-sm text-fg-muted mt-1">Cada km rodado tem um custo. Se voce nao sabe o seu, pode estar rodando no vermelho sem saber.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface/50 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-income-bg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-5 h-5 text-income" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-fg">Solucao: Rota Financeira</h3>
+            <p class="text-sm text-fg-muted mt-1">Em poucos minutos por dia, voce tem um raio-x completo da saude financeira do seu negocio sobre rodas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROJECAO FINANCEIRA ====== -->
+  <section id="projecao" class="bg-card py-20 sm:py-28 px-5">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-fg-muted font-semibold text-sm tracking-widest uppercase">Projecao financeira</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-fg mt-3">
+          Vai trocar de carro?<br class="hidden sm:block" />
+          <span class="text-income">Projete o impacto antes</span>
+        </h2>
+        <p class="text-lg text-fg-muted mt-4 leading-relaxed">
+          Simule os custos fixos de cada cenario e veja como isso afeta o custo por km do seu negocio sobre rodas.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 border border-line">
+          <div class="text-xs font-semibold text-fg-muted bg-card-alt inline-block px-3 py-1 rounded-full mb-5">
+            CARRO ATUAL
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-center justify-between text-fg">
+              <span class="text-sm text-fg-muted">Financiamento</span>
+              <span class="font-bold">R$ 0</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">Seguro</span>
+              <span class="font-bold">R$ 180</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">IPVA</span>
+              <span class="font-bold">R$ 80</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">Manutencao</span>
+              <span class="font-bold">R$ 250</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4 mt-2">
+              <span class="font-semibold">Total fixo mensal</span>
+              <span class="text-xl font-black text-fg">R$ 510</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-surface rounded-2xl p-6 sm:p-8 border border-line">
+          <div class="text-xs font-semibold text-fg-muted bg-card-alt inline-block px-3 py-1 rounded-full mb-5">
+            NOVO CARRO
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-center justify-between text-fg">
+              <span class="text-sm text-fg-muted">Financiamento (48x)</span>
+              <span class="font-bold">R$ 1.200</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">Seguro</span>
+              <span class="font-bold">R$ 320</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">IPVA</span>
+              <span class="font-bold">R$ 150</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4">
+              <span class="text-sm text-fg-muted">Manutencao</span>
+              <span class="font-bold">R$ 100</span>
+            </li>
+            <li class="flex items-center justify-between text-fg border-t border-line-light pt-4 mt-2">
+              <span class="font-semibold">Total fixo mensal</span>
+              <span class="text-xl font-black text-fg">R$ 1.770</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto mt-6 bg-card-alt rounded-xl border border-line p-5 sm:p-6 text-center">
+        <span class="text-sm font-semibold text-fg-muted">Mudanca no custo por km</span>
+        <div class="flex items-center justify-center gap-3 sm:gap-6 mt-2 flex-wrap">
+          <span class="text-xl sm:text-2xl font-bold text-fg">R$ 0,41/km</span>
+          <svg class="w-5 h-5 text-fg-muted flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          <span class="text-xl sm:text-2xl font-bold text-fg">R$ 1,42/km</span>
+          <span class="text-sm font-semibold text-alert bg-alert-bg px-3 py-1 rounded-full">+ R$ 1,01/km</span>
+        </div>
+        <p class="text-sm text-fg-muted mt-3">
+          Projecao baseada em 1.200 km rodados por mes em cada cenario
+        </p>
+      </div>
+
+      <div class="text-center mt-10">
+        <a
+          href="#precos"
+          class="inline-flex items-center gap-2 bg-fg text-white text-base font-bold px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-lg focus:outline-none focus:ring-2 focus:ring-focus focus:ring-offset-2"
+          (click)="scrollTo('precos'); $event.preventDefault()"
+        >
+          SIMULAR MEU CENARIO
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRICING ====== -->
+  <section id="precos" class="relative py-20 sm:py-28 px-5 overflow-hidden">
+    <div class="absolute inset-0 bg-fg"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_#2D6A4F20,_transparent_60%)]"></div>
+    <div class="relative max-w-6xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-income font-semibold text-sm tracking-widest uppercase text-income">Assinatura</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-white mt-3">
+          Invista no seu negocio<br class="hidden sm:block" />
+          por menos de <span class="text-income">um cafe</span>
+        </h2>
+        <p class="text-white/60 text-lg mt-4 leading-relaxed">
+          Nao e um plano basico. E acesso completo a todas as funcionalidades do Rota Financeira por um valor que cabe no seu dia.
+        </p>
+      </div>
+
+      <div class="max-w-lg mx-auto">
+        <div class="bg-white rounded-2xl p-8 sm:p-10 text-center border border-white/10 shadow-2xl relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-income text-white text-xs font-bold px-4 py-1 rounded-full">
+            PLANO UNICO
+          </div>
+
+          <div class="mt-4">
+            <span class="block text-6xl sm:text-7xl font-black text-fg tracking-tight">R$ 1,00</span>
+            <span class="block text-fg-muted text-base font-medium mt-1">por mes</span>
+          </div>
+
+          <hr class="my-8 border-line-light" />
+
+          <ul class="text-left space-y-4">
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Dashboard completo</strong> com lucro por hora e custo por km</span>
+            </li>
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Registro de receitas e despesas</strong> rapido e intuitivo</span>
+            </li>
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Motor de insights</strong> com alertas de consumo e ponto de equilibrio</span>
+            </li>
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Projecao financeira</strong> para troca de veiculo com simulacao de custos fixos</span>
+            </li>
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Extrato completo</strong> filtrado por periodo e categoria</span>
+            </li>
+            <li class="flex items-start gap-3 text-fg">
+              <svg class="w-5 h-5 text-income flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span><strong class="font-semibold">Suporte prioritario</strong> via WhatsApp</span>
+            </li>
+          </ul>
+
+          <a
+            href="#"
+            class="mt-8 w-full inline-flex items-center justify-center gap-2 bg-income text-white text-base font-bold px-8 py-4 rounded-xl hover:bg-income-hover transition-all shadow-lg shadow-income/30 focus:outline-none focus:ring-2 focus:ring-income focus:ring-offset-2"
+          >
+            QUERO MEU CONTROLE FINANCEIRO
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </a>
+
+          <small class="block mt-5 text-fg-muted text-xs leading-relaxed">
+            * Este preco e promocional e sujeito a alteracao conforme o aumento da demanda.
+          </small>
+
+          <p class="mt-4 text-fg-muted text-sm flex items-center justify-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Cancele quando quiser, sem multa
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA FINAL ====== -->
+  <section class="bg-surface py-16 sm:py-20 px-5">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-fg">
+        Pare de dirigir no escuro financeiro
+      </h2>
+      <p class="text-lg text-fg-muted mt-4 leading-relaxed max-w-xl mx-auto">
+        Descubra quanto voce realmente ganha por hora. Sao menos de 2 minutos por dia para ter o controle total do seu negocio.
+      </p>
+      <a
+        href="#precos"
+        class="mt-8 inline-flex items-center gap-2 bg-income text-white text-base font-bold px-8 py-4 rounded-xl hover:bg-income-hover transition-all shadow-lg shadow-income/20 focus:outline-none focus:ring-2 focus:ring-income focus:ring-offset-2 focus:ring-offset-surface"
+        (click)="scrollTo('precos'); $event.preventDefault()"
+      >
+        ASSINAR POR R$ 1,00/MES
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="bg-fg text-white/50 py-12 px-5">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <span class="text-white font-extrabold text-lg">Rota Financeira</span>
+    <p class="text-xs">&copy; 2026 Rota Financeira. Todos os direitos reservados.</p>
+  </div>
+</footer>
