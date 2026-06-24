@@ -1,46 +1,99 @@
 import { Component, inject, Input, booleanAttribute } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 import { TransactionService } from '../../core/services/transaction.service';
 import { ToastService } from '../../shared/toast/toast.service';
-import { TransactionType } from '../../models/transaction.type';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { DailyCosts } from '../../models/driver-config.type';
 
 @Component({
   selector: 'app-entry-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, CurrencyPipe],
   templateUrl: './entry-form.component.html',
 })
 export class EntryFormComponent {
   @Input({ transform: booleanAttribute }) embedded = false;
 
-  form: FormGroup;
-  selectedType: TransactionType = 'income';
   private toastService = inject(ToastService);
   private router = inject(Router);
+
+  form;
+
+  today = new Date().toISOString().split('T')[0];
+  dailyFixedCosts: DailyCosts | null = null;
+  hasConfig = false;
 
   constructor(
     private fb: FormBuilder,
     private transactionService: TransactionService,
   ) {
     this.form = this.fb.group({
-      description: ['', [Validators.required, Validators.minLength(2)]],
-      amount: ['', [Validators.required, Validators.min(0.01)]],
-      date: [new Date().toISOString().split('T')[0], [Validators.required]],
+      date: [this.today, [Validators.required]],
+      totalEarnings: ['', [Validators.required, Validators.min(0)]],
+      kmDriven: ['', [Validators.required, Validators.min(0)]],
+      hoursWorked: ['', [Validators.required, Validators.min(0)]],
+      rideCount: ['', [Validators.required, Validators.min(0)]],
+      fuelCost: ['', [Validators.required, Validators.min(0)]],
+      vehicleConsumption: ['', [Validators.required, Validators.min(0)]],
+      dailyInstallment: [{ value: '', disabled: true }],
+      dailyInsurance: [{ value: '', disabled: true }],
+      dailyIpva: [{ value: '', disabled: true }],
     });
+
+    this.loadFixedCosts();
   }
 
-  setType(type: TransactionType): void {
-    this.selectedType = type;
+  private loadFixedCosts(): void {
+    const config = this.transactionService.getConfig();
+    if (!config) {
+      this.hasConfig = false;
+      return;
+    }
+
+    this.hasConfig = true;
+    this.dailyFixedCosts = this.transactionService.calculateDailyCosts(config);
+
+    const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    this.form.patchValue({
+      dailyInstallment: fmt(this.dailyFixedCosts.dailyInstallment),
+      dailyInsurance: fmt(this.dailyFixedCosts.dailyInsurance),
+      dailyIpva: fmt(this.dailyFixedCosts.dailyIpva),
+    });
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
 
-    const { description, amount, date } = this.form.value;
-    this.transactionService.add(this.selectedType, description, parseFloat(amount), date);
-    this.form.reset({ date: new Date().toISOString().split('T')[0] });
-    this.toastService.show('Transacao cadastrada com sucesso.');
+    const raw = this.form.getRawValue();
+    const date = raw.date ?? '';
+    const totalEarnings = parseFloat(raw.totalEarnings ?? '0');
+    const fuelCost = parseFloat(raw.fuelCost ?? '0');
+    const kmDriven = parseFloat(raw.kmDriven ?? '0');
+    const hoursWorked = parseFloat(raw.hoursWorked ?? '0');
+    const rideCount = parseFloat(raw.rideCount ?? '0');
+    const vehicleConsumption = parseFloat(raw.vehicleConsumption ?? '0');
+
+    this.transactionService.add('income', `Faturamento Diario - ${date}`, totalEarnings, date);
+    this.transactionService.add('expense', `Combustivel/Energia Diario - ${date}`, fuelCost, date);
+
+    if (this.hasConfig && this.dailyFixedCosts) {
+      this.transactionService.add('expense', 'Custo Fixo - Parcela Veiculo', this.dailyFixedCosts.dailyInstallment, date);
+      this.transactionService.add('expense', 'Custo Fixo - Seguro', this.dailyFixedCosts.dailyInsurance, date);
+      this.transactionService.add('expense', 'Custo Fixo - IPVA', this.dailyFixedCosts.dailyIpva, date);
+    }
+
+    this.transactionService.saveDailyClose({
+      date,
+      kmDriven,
+      hoursWorked,
+      rideCount,
+      vehicleConsumption,
+    });
+
+    this.form.reset({ date: this.today });
+    this.loadFixedCosts();
+    this.toastService.show('Fechamento diario salvo com sucesso.');
     this.router.navigate(['/dashboard']);
   }
 }

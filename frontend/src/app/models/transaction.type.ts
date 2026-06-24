@@ -9,3 +9,13 @@ export interface Transaction {
   date: string;
   createdAt: string;
 }
+
+export interface DailyClose {
+  id: string;
+  date: string;
+  kmDriven: number;
+  hoursWorked: number;
+  rideCount: number;
+  vehicleConsumption: number;
+  createdAt: string;
+}

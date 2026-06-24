@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Transaction, TransactionFilter, TransactionType } from '../../models/transaction.type';
+import { Transaction, TransactionFilter, TransactionType, DailyClose } from '../../models/transaction.type';
 import {
   DriverConfig,
   DailyCosts,
@@ -10,6 +10,7 @@ import {
 } from '../../models/driver-config.type';
 
 const STORAGE_KEY = 'rota-financeira-transactions';
+const DAILY_CLOSE_KEY = 'rota-financeira-daily-closes';
 const CONFIG_STORAGE_KEY = 'rota-financeira-driver-config';
 
 function round(value: number): number {
@@ -83,6 +84,32 @@ export class TransactionService {
   delete(id: string): void {
     this.transactions.update((list) => list.filter((t) => t.id !== id));
     this.saveToStorage();
+  }
+
+  saveDailyClose(data: {
+    date: string;
+    kmDriven: number;
+    hoursWorked: number;
+    rideCount: number;
+    vehicleConsumption: number;
+  }): void {
+    const dailyClose: DailyClose = {
+      id: crypto.randomUUID(),
+      ...data,
+      createdAt: new Date().toISOString(),
+    };
+    const stored = this.loadDailyClosesFromStorage();
+    stored.push(dailyClose);
+    localStorage.setItem(DAILY_CLOSE_KEY, JSON.stringify(stored));
+  }
+
+  private loadDailyClosesFromStorage(): DailyClose[] {
+    try {
+      const data = localStorage.getItem(DAILY_CLOSE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
   }
 
   private loadFromStorage(): Transaction[] {

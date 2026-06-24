@@ -177,40 +177,6 @@
         
       }
     </div>
-    @if (showFixedCosts) {
-      <div class="bg-card border border-line rounded-xl p-4 shadow-sm mt-4 space-y-3">
-        <h2 class="text-sm font-semibold text-fg uppercase tracking-wider">
-          Custos Fixos de Hoje
-        </h2>
-        <div class="grid grid-cols-3 gap-3">
-          <div class="bg-card-alt rounded-lg p-2 text-center">
-            <p class="text-xs text-fg-muted">Parcela/dia</p>
-            <p class="text-base font-bold text-fg">{{ formatCurrency(dailyFixedCosts!.dailyInstallment) }}</p>
-          </div>
-          <div class="bg-card-alt rounded-lg p-2 text-center">
-            <p class="text-xs text-fg-muted">Seguro/dia</p>
-            <p class="text-base font-bold text-fg">{{ formatCurrency(dailyFixedCosts!.dailyInsurance) }}</p>
-          </div>
-          <div class="bg-card-alt rounded-lg p-2 text-center">
-            <p class="text-xs text-fg-muted">IPVA/dia</p>
-            <p class="text-base font-bold text-fg">{{ formatCurrency(dailyFixedCosts!.dailyIpva) }}</p>
-          </div>
-        </div>
-        <div class="border-t border-line-light pt-2">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-fg">Total de custos fixos hoje</span>
-            <span class="text-lg font-bold text-expense">{{ formatCurrency(dailyFixedCosts!.totalDaily) }}</span>
-          </div>
-          <button
-            type="button"
-            (click)="addFixedCosts()"
-            class="cursor-pointer mt-3 w-full py-2 px-3 rounded-lg text-sm font-medium text-white bg-income bg-card-alt border border-line hover:bg-line transition-colors"
-          >
-            Lancar custos fixos como saida
-          </button>
-        </div>
-      </div>
-    }
     <router-outlet></router-outlet>
   </div>
 </div>

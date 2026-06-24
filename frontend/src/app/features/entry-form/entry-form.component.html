@@ -2,159 +2,362 @@
   <div class="min-h-screen bg-surface p-4 md:p-6 pb-20">
     <div class="max-w-lg mx-auto">
       <div class="mb-6">
-        <h1 class="text-xl font-semibold text-fg">Novo Lancamento</h1>
-      </div>
-      <div class="flex rounded-lg border border-line overflow-hidden bg-card divide-x divide-line-light">
-        <button
-          type="button"
-          (click)="setType('income')"
-          [class]="
-            'flex-1 py-2 px-3 text-sm font-small transition-colors ' +
-            (selectedType === 'income'
-              ? 'bg-income text-white'
-              : 'bg-card text-fg-muted border border-line')
-          "
-        >
-          Entrada
-        </button>
-        <button
-          type="button"
-          (click)="setType('expense')"
-          [class]="
-            'flex-1 py-2 px-3 text-sm font-medium transition-colors ' +
-            (selectedType === 'expense'
-              ? 'bg-expense text-white'
-              : 'bg-card text-fg-muted border border-line')
-          "
-        >
-          Saida
-        </button>
+        <h1 class="text-xl font-semibold text-fg">Fechamento Diario</h1>
+        <p class="text-sm text-fg-muted mt-1">Registre o resumo do seu dia de trabalho.</p>
       </div>
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
         <div>
-          <label class="block text-sm font-medium text-fg mb-1">Descricao</label>
+          <label class="block text-sm font-medium text-fg mb-1" for="date">Data do Registro</label>
           <input
-            type="text"
-            formControlName="description"
-            placeholder="Ex: Corrida Centro, Gasolina..."
-            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-          />
-          @if (form.get('description')?.touched && form.get('description')?.invalid) {
-            <p class="text-expense text-xs mt-1">Descricao e obrigatoria (minimo 2 caracteres).</p>
-          }
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-fg mb-1">Valor (R$)</label>
-          <input
-            type="number"
-            formControlName="amount"
-            inputmode="decimal"
-            step="0.01"
-            min="0.01"
-            placeholder="0,00"
-            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-          />
-          @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
-            <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
-          }
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-fg mb-1">Data</label>
-          <input
+            id="date"
             type="date"
             formControlName="date"
+            max="{{ today }}"
             class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
           />
+          @if (form.get('date')?.touched && form.get('date')?.invalid) {
+            <p class="text-expense text-xs mt-1">Data e obrigatoria.</p>
+          }
         </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="totalEarnings">Ganho Total (R$)</label>
+            <input
+              id="totalEarnings"
+              type="number"
+              formControlName="totalEarnings"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              placeholder="0,00"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('totalEarnings')?.touched && form.get('totalEarnings')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um valor valido.</p>
+            }
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="fuelCost">Combustivel/Energia (R$)</label>
+            <input
+              id="fuelCost"
+              type="number"
+              formControlName="fuelCost"
+              inputmode="decimal"
+              step="0.01"
+              min="0"
+              placeholder="0,00"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('fuelCost')?.touched && form.get('fuelCost')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe um valor valido.</p>
+            }
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="kmDriven">KM Rodado</label>
+            <input
+              id="kmDriven"
+              type="number"
+              formControlName="kmDriven"
+              inputmode="decimal"
+              step="0.1"
+              min="0"
+              placeholder="0"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('kmDriven')?.touched && form.get('kmDriven')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe a quilometragem.</p>
+            }
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="hoursWorked">Horas Trabalhadas</label>
+            <input
+              id="hoursWorked"
+              type="number"
+              formControlName="hoursWorked"
+              inputmode="decimal"
+              step="0.5"
+              min="0"
+              placeholder="0"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('hoursWorked')?.touched && form.get('hoursWorked')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe as horas trabalhadas.</p>
+            }
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="rideCount">Corridas Realizadas</label>
+            <input
+              id="rideCount"
+              type="number"
+              formControlName="rideCount"
+              inputmode="numeric"
+              step="1"
+              min="0"
+              placeholder="0"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('rideCount')?.touched && form.get('rideCount')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe o numero de corridas.</p>
+            }
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-fg mb-1" for="vehicleConsumption">Consumo (km/L)</label>
+            <input
+              id="vehicleConsumption"
+              type="number"
+              formControlName="vehicleConsumption"
+              inputmode="decimal"
+              step="0.1"
+              min="0"
+              placeholder="0"
+              class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+            />
+            @if (form.get('vehicleConsumption')?.touched && form.get('vehicleConsumption')?.invalid) {
+              <p class="text-expense text-xs mt-1">Informe o consumo do veiculo.</p>
+            }
+          </div>
+        </div>
+
+        @if (hasConfig && dailyFixedCosts) {
+          <div class="bg-card-alt border border-line-light rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-fg-muted uppercase tracking-wider">Custos Fixos do Dia</span>
+              <span class="text-xs text-fg-muted bg-surface px-2 py-0.5 rounded-full">auto</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-xs text-fg-muted mb-1">Parcela/dia</label>
+                <input
+                  type="text"
+                  formControlName="dailyInstallment"
+                  readonly
+                  class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-fg-muted mb-1">Seguro/dia</label>
+                <input
+                  type="text"
+                  formControlName="dailyInsurance"
+                  readonly
+                  class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-fg-muted mb-1">IPVA/dia</label>
+                <input
+                  type="text"
+                  formControlName="dailyIpva"
+                  readonly
+                  class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+                />
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-line-light pt-2">
+              <span class="text-sm font-medium text-fg">Total custos fixos</span>
+              <span class="text-base font-bold text-expense">{{ dailyFixedCosts.totalDaily | currency:'BRL' }}</span>
+            </div>
+          </div>
+        } @else {
+          <div class="bg-card-alt border border-line-light rounded-xl p-4 text-center">
+            <p class="text-sm text-fg-muted">
+              Configure seus custos fixos para ve-los aqui.
+            </p>
+            <a routerLink="/costs" class="inline-block mt-2 text-sm font-semibold text-income hover:underline">
+              Ir para Custos
+            </a>
+          </div>
+        }
+
         <button
           type="submit"
           [disabled]="form.invalid"
-          [class]="
-            'w-full py-3 px-4 rounded-xl text-sm font-medium text-white transition-colors ' +
-            (selectedType === 'income'
-              ? 'bg-income hover:bg-income-hover disabled:bg-income-disabled'
-              : 'bg-expense hover:bg-expense-hover disabled:bg-expense-disabled')
-          "
+          class="w-full py-3 px-4 rounded-xl text-sm font-medium text-white bg-income hover:bg-income-hover disabled:bg-income-disabled transition-colors"
         >
-          Salvar {{ selectedType === 'income' ? 'Entrada' : 'Saida' }}
+          Salvar Dia
         </button>
       </form>
     </div>
   </div>
 } @else {
-  <div class="flex rounded-lg border border-line overflow-hidden bg-card divide-x divide-line-light">
-    <button
-      type="button"
-      (click)="setType('income')"
-      [class]="
-        'flex-1 py-2 px-3 text-sm font-small transition-colors ' +
-        (selectedType === 'income'
-          ? 'bg-income text-white'
-          : 'bg-card text-fg-muted border border-line')
-      "
-    >
-      Entrada
-    </button>
-    <button
-      type="button"
-      (click)="setType('expense')"
-      [class]="
-        'flex-1 py-2 px-3 text-sm font-medium transition-colors ' +
-        (selectedType === 'expense'
-          ? 'bg-expense text-white'
-          : 'bg-card text-fg-muted border border-line')
-      "
-    >
-      Saida
-    </button>
-  </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-card border border-line rounded-xl p-4 shadow-sm space-y-4">
     <div>
-      <label class="block text-sm font-medium text-fg mb-1">Descricao</label>
+      <label class="block text-sm font-medium text-fg mb-1" for="date">Data do Registro</label>
       <input
-        type="text"
-        formControlName="description"
-        placeholder="Ex: Corrida Centro, Gasolina..."
-        class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-      />
-      @if (form.get('description')?.touched && form.get('description')?.invalid) {
-        <p class="text-expense text-xs mt-1">Descricao e obrigatoria (minimo 2 caracteres).</p>
-      }
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-fg mb-1">Valor (R$)</label>
-      <input
-        type="number"
-        formControlName="amount"
-        inputmode="decimal"
-        step="0.01"
-        min="0.01"
-        placeholder="0,00"
-        class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
-      />
-      @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
-        <p class="text-expense text-xs mt-1">Informe um valor valido maior que zero.</p>
-      }
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-fg mb-1">Data</label>
-      <input
+        id="date"
         type="date"
         formControlName="date"
+        max="{{ today }}"
         class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
       />
+      @if (form.get('date')?.touched && form.get('date')?.invalid) {
+        <p class="text-expense text-xs mt-1">Data e obrigatoria.</p>
+      }
     </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="totalEarnings">Ganho Total (R$)</label>
+        <input
+          id="totalEarnings"
+          type="number"
+          formControlName="totalEarnings"
+          inputmode="decimal"
+          step="0.01"
+          min="0"
+          placeholder="0,00"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('totalEarnings')?.touched && form.get('totalEarnings')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe um valor valido.</p>
+        }
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="fuelCost">Combustivel/Energia (R$)</label>
+        <input
+          id="fuelCost"
+          type="number"
+          formControlName="fuelCost"
+          inputmode="decimal"
+          step="0.01"
+          min="0"
+          placeholder="0,00"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('fuelCost')?.touched && form.get('fuelCost')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe um valor valido.</p>
+        }
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="kmDriven">KM Rodado</label>
+        <input
+          id="kmDriven"
+          type="number"
+          formControlName="kmDriven"
+          inputmode="decimal"
+          step="0.1"
+          min="0"
+          placeholder="0"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('kmDriven')?.touched && form.get('kmDriven')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe a quilometragem.</p>
+        }
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="hoursWorked">Horas Trabalhadas</label>
+        <input
+          id="hoursWorked"
+          type="number"
+          formControlName="hoursWorked"
+          inputmode="decimal"
+          step="0.5"
+          min="0"
+          placeholder="0"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('hoursWorked')?.touched && form.get('hoursWorked')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe as horas trabalhadas.</p>
+        }
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="rideCount">Corridas Realizadas</label>
+        <input
+          id="rideCount"
+          type="number"
+          formControlName="rideCount"
+          inputmode="numeric"
+          step="1"
+          min="0"
+          placeholder="0"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('rideCount')?.touched && form.get('rideCount')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe o numero de corridas.</p>
+        }
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-fg mb-1" for="vehicleConsumption">Consumo (km/L)</label>
+        <input
+          id="vehicleConsumption"
+          type="number"
+          formControlName="vehicleConsumption"
+          inputmode="decimal"
+          step="0.1"
+          min="0"
+          placeholder="0"
+          class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+        />
+        @if (form.get('vehicleConsumption')?.touched && form.get('vehicleConsumption')?.invalid) {
+          <p class="text-expense text-xs mt-1">Informe o consumo do veiculo.</p>
+        }
+      </div>
+    </div>
+
+    @if (hasConfig && dailyFixedCosts) {
+      <div class="bg-card-alt border border-line-light rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-fg-muted uppercase tracking-wider">Custos Fixos do Dia</span>
+          <span class="text-xs text-fg-muted bg-surface px-2 py-0.5 rounded-full">auto</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-xs text-fg-muted mb-1">Parcela/dia</label>
+            <input
+              type="text"
+              formControlName="dailyInstallment"
+              readonly
+              class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+            />
+          </div>
+          <div>
+            <label class="block text-xs text-fg-muted mb-1">Seguro/dia</label>
+            <input
+              type="text"
+              formControlName="dailyInsurance"
+              readonly
+              class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+            />
+          </div>
+          <div>
+            <label class="block text-xs text-fg-muted mb-1">IPVA/dia</label>
+            <input
+              type="text"
+              formControlName="dailyIpva"
+              readonly
+              class="w-full px-3 py-2 bg-card border border-line-light rounded-lg text-sm text-fg cursor-not-allowed outline-none"
+            />
+          </div>
+        </div>
+        <div class="flex items-center justify-between border-t border-line-light pt-2">
+          <span class="text-sm font-medium text-fg">Total custos fixos</span>
+          <span class="text-base font-bold text-expense">{{ dailyFixedCosts.totalDaily | currency:'BRL' }}</span>
+        </div>
+      </div>
+    } @else {
+      <div class="bg-card-alt border border-line-light rounded-xl p-4 text-center">
+        <p class="text-sm text-fg-muted">
+          Configure seus custos fixos para ve-los aqui.
+        </p>
+        <a routerLink="/costs" class="inline-block mt-2 text-sm font-semibold text-income hover:underline">
+          Ir para Custos
+        </a>
+      </div>
+    }
+
     <button
       type="submit"
       [disabled]="form.invalid"
-      [class]="
-        'w-full py-3 px-4 rounded-xl text-sm font-medium text-white transition-colors ' +
-        (selectedType === 'income'
-          ? 'bg-income hover:bg-income-hover disabled:bg-income-disabled'
-          : 'bg-expense hover:bg-expense-hover disabled:bg-expense-disabled')
-      "
+      class="w-full py-3 px-4 rounded-xl text-sm font-medium text-white bg-income hover:bg-income-hover disabled:bg-income-disabled transition-colors"
     >
-      Salvar {{ selectedType === 'income' ? 'Entrada' : 'Saida' }}
+      Salvar Dia
     </button>
   </form>
 }
