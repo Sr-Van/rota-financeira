@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
+import { DailyCosts } from '../../models/driver-config.type';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,19 @@ export class DashboardComponent {
   filter = signal<TransactionFilter>('day');
   customDate = signal<string>('');
   showDatePicker = signal(false);
+
+  dailyFixedCosts: DailyCosts | null = null;
+
+  constructor() {
+    const config = this.transactionService.getConfig();
+    if (config) {
+      this.dailyFixedCosts = this.transactionService.calculateDailyCosts(config);
+    }
+  }
+
+  get showFixedCosts(): boolean {
+    return this.filter() === 'day' && !this.customDate() && this.dailyFixedCosts !== null;
+  }
 
   private filteredTransactions = computed(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -65,6 +79,16 @@ export class DashboardComponent {
     if (!this.showDatePicker()) {
       this.customDate.set('');
     }
+  }
+
+  addFixedCosts(): void {
+    if (!this.dailyFixedCosts) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    this.transactionService.add('expense', 'Financiamento', this.dailyFixedCosts.dailyInstallment, today);
+    this.transactionService.add('expense', 'Seguro', this.dailyFixedCosts.dailyInsurance, today);
+    this.transactionService.add('expense', 'IPVA', this.dailyFixedCosts.dailyIpva, today);
+    this.toastService.show('Custos fixos lancados como saida.');
   }
 
   deleteTransaction(id: string): void {
