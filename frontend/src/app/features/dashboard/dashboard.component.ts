@@ -4,12 +4,18 @@ import { TransactionService } from '../../core/services/transaction.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
+import { getWeekStart, formatWeekRange, formatMonthLabel } from '../../core/utils/date.utils';
 
 interface ProgressData {
   current: number;
   target: number;
   percentage: number;
   barWidth: number;
+  label: string;
+}
+
+interface SelectOption {
+  value: string;
   label: string;
 }
 
@@ -25,14 +31,14 @@ export class DashboardComponent {
   private toastService = inject(ToastService);
 
   filter = signal<TransactionFilter>('day');
-  customDate = signal<string>('');
-  showDatePicker = signal(false);
+  referenceDate = signal<string>('');
 
   private filteredTransactions = computed(() => {
-    const today = new Date().toISOString().split('T')[0];
-    if (this.customDate()) {
-      return this.transactionService.getByFilter('day', this.customDate());
+    const ref = this.referenceDate();
+    if (ref) {
+      return this.transactionService.getByFilter(this.filter(), ref);
     }
+    const today = new Date().toISOString().split('T')[0];
     return this.transactionService.getByFilter(this.filter(), today);
   });
 
@@ -55,6 +61,41 @@ export class DashboardComponent {
   get balance(): number {
     return this.totalIncome - this.totalExpense;
   }
+
+  availableWeeks = computed<SelectOption[]>(() => {
+    const weeks = new Map<string, number>();
+    for (const t of this.transactionService.getAll()) {
+      const ws = getWeekStart(t.date);
+      if (!weeks.has(ws)) {
+        weeks.set(ws, new Date(ws + 'T00:00:00').getTime());
+      }
+    }
+    const today = new Date().toISOString().split('T')[0];
+    const currentWeekStart = getWeekStart(today);
+    if (!weeks.has(currentWeekStart)) {
+      weeks.set(currentWeekStart, new Date(currentWeekStart).getTime());
+    }
+    return Array.from(weeks.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([value]) => ({ value, label: formatWeekRange(value) }));
+  });
+
+  availableMonths = computed<SelectOption[]>(() => {
+    const months = new Map<string, number>();
+    for (const t of this.transactionService.getAll()) {
+      const m = t.date.substring(0, 7);
+      if (!months.has(m)) {
+        months.set(m, new Date(m + '-01').getTime());
+      }
+    }
+    const currentMonth = new Date().toISOString().split('T')[0].substring(0, 7);
+    if (!months.has(currentMonth)) {
+      months.set(currentMonth, new Date(currentMonth + '-01').getTime());
+    }
+    return Array.from(months.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([value]) => ({ value, label: formatMonthLabel(value) }));
+  });
 
   progress = computed<ProgressData | null>(() => {
     const goals = this.settingsService.getGoals();
@@ -101,23 +142,32 @@ export class DashboardComponent {
 
   setFilter(filter: TransactionFilter): void {
     this.filter.set(filter);
-    this.customDate.set('');
-    this.showDatePicker.set(false);
+    const today = new Date().toISOString().split('T')[0];
+    switch (filter) {
+      case 'week':
+        this.referenceDate.set(getWeekStart(today));
+        break;
+      case 'month':
+        this.referenceDate.set(today.substring(0, 7));
+        break;
+      default:
+        this.referenceDate.set('');
+    }
   }
 
-  setCustomDate(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
+  setCustomDate(value: string): void {
     if (value) {
-      this.customDate.set(value);
+      this.referenceDate.set(value);
       this.filter.set('day');
     }
   }
 
-  toggleDatePicker(): void {
-    this.showDatePicker.update((v) => !v);
-    if (!this.showDatePicker()) {
-      this.customDate.set('');
-    }
+  selectWeek(value: string): void {
+    this.referenceDate.set(value);
+  }
+
+  selectMonth(value: string): void {
+    this.referenceDate.set(value);
   }
 
   deleteTransaction(id: string): void {

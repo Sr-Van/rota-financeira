@@ -80,8 +80,9 @@ export class EntryFormComponent {
     const rideCount = parseFloat(raw.rideCount ?? '0');
     const vehicleConsumption = parseFloat(raw.vehicleConsumption ?? '0');
 
+    const totalFuelCost = kmDriven / vehicleConsumption * fuelCost;
     this.transactionService.add('income', `Faturamento Diario - ${date}`, totalEarnings, date);
-    this.transactionService.add('expense', `Combustivel/Energia Diario - ${date}`, fuelCost, date);
+    this.transactionService.add('expense', `Combustivel/Energia Diario - ${date}`, totalFuelCost, date);
 
     if (this.hasConfig && this.dailyFixedCosts) {
       this.transactionService.add('expense', 'Custo Fixo - Parcela Veiculo', this.dailyFixedCosts.dailyInstallment, date);
