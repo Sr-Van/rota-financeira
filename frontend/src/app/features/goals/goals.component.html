@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-surface p-4 md:p-6 pb-20">
+  <div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-xl font-semibold text-fg">Metas</h1>
+    </div>
+
+    <div class="bg-card border border-line rounded-xl p-4 md:p-6 shadow-sm mb-4">
+      <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
+        <div>
+          <label for="dailyGross" class="block text-sm font-medium text-fg mb-1">
+            Meta de Ganho Bruto Diário (R$)
+          </label>
+          <input
+            id="dailyGross"
+            type="number"
+            formControlName="dailyGross"
+            placeholder="0,00"
+            class="w-full px-3 py-2 border border-line rounded-lg text-sm focus:ring-2 focus:ring-focus focus:border-transparent outline-none"
+          />
+        </div>
+
+        <div class="bg-surface rounded-lg p-4 space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-fg-muted">Dias Trabalhados (mês)</span>
+            <span class="font-semibold text-fg">{{ daysWorked }}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-fg-muted">Meta Mensal</span>
+            <span class="font-semibold text-fg">{{ formatCurrency(monthlyGross) }}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-fg-muted">Meta Semanal</span>
+            <span class="font-semibold text-fg">{{ formatCurrency(weeklyGross) }}</span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-2 px-4 bg-income text-white rounded-lg font-medium text-sm hover:bg-income-hover transition-colors disabled:opacity-50"
+          [disabled]="form.invalid"
+        >
+          Salvar Metas
+        </button>
+
+        @if (saved) {
+          <p class="text-center text-sm text-income font-medium">
+            Metas salvas com sucesso!
+          </p>
+        }
+      </form>
+    </div>
+
+    <a
+      routerLink="/dashboard"
+      class="block text-center text-sm text-income font-medium hover:underline"
+    >
+      Voltar ao Dashboard
+    </a>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-surface p-4 md:p-6 pb-20">
+<div class="min-h-screen bg-surface p-4 md:p-6 md:pb-[9rem]">
   <div class="max-w-3xl mx-auto">
     <div class="mb-6">
       <h1 class="text-xl font-semibold text-fg">Dashboard</h1>
@@ -87,6 +87,47 @@
         />
       }
     </div>
+
+    @if (progress(); as p) {
+      <div class="bg-card border border-line rounded-xl p-4 shadow-sm mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-sm font-medium text-fg-muted">Progresso da Meta {{ p.label }}</h2>
+          <span
+            class="text-xs font-medium"
+            [class.text-income]="p.percentage >= 100"
+            [class.text-alert]="p.percentage < 50"
+            [class.text-[#3B82F6]]="p.percentage >= 50 && p.percentage < 100"
+          >
+            {{ p.percentage.toFixed(1) }}%
+          </span>
+        </div>
+        <div class="flex items-baseline gap-1 mb-2">
+          <span class="text-lg font-bold text-fg">{{ formatCurrency(p.current) }}</span>
+          <span class="text-sm text-fg-muted">/ {{ formatCurrency(p.target) }}</span>
+        </div>
+        <div class="w-full bg-surface rounded-full h-3 overflow-hidden">
+          <div
+            class="h-full rounded-full transition-all duration-500"
+            [class]="progressBarColor(p.percentage)"
+            [style.width.%]="p.barWidth"
+          ></div>
+        </div>
+        @if (p.percentage >= 100) {
+          <p class="text-xs text-income font-medium mt-1">
+            {{ p.percentage.toFixed(1) }}% da meta batida!
+          </p>
+        }
+      </div>
+    } @else {
+      @if (filter() !== 'year') {
+        <a
+          routerLink="/goals"
+          class="block mb-6 p-4 bg-alert-bg border border-alert rounded-xl text-center text-sm text-alert font-medium hover:underline"
+        >
+          Configure suas metas de ganho
+        </a>
+      }
+    }
 
     <div class="bg-card border border-line rounded-xl shadow-sm overflow-hidden">
       @if (transactions.length === 0) {

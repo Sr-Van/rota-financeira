@@ -8,10 +8,12 @@ import {
   CombinedCosts,
   VehicleType,
 } from '../../models/driver-config.type';
+import { Goals } from '../../models/goals.type';
 
 const STORAGE_KEY = 'rota-financeira-transactions';
 const DAILY_CLOSE_KEY = 'rota-financeira-daily-closes';
 const CONFIG_STORAGE_KEY = 'rota-financeira-driver-config';
+const GOALS_STORAGE_KEY = 'rota-financeira-goals';
 
 function round(value: number): number {
   return Math.round(value * 100) / 100;
@@ -132,6 +134,19 @@ export class TransactionService {
   getConfig(): DriverConfig | null {
     try {
       const data = localStorage.getItem(CONFIG_STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  saveGoals(goals: Goals): void {
+    localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals));
+  }
+
+  getGoals(): Goals | null {
+    try {
+      const data = localStorage.getItem(GOALS_STORAGE_KEY);
       return data ? JSON.parse(data) : null;
     } catch {
       return null;

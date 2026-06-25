@@ -3,6 +3,15 @@ import { RouterOutlet } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
+import { Goals } from '../../models/goals.type';
+
+interface ProgressData {
+  current: number;
+  target: number;
+  percentage: number;
+  barWidth: number;
+  label: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -46,6 +55,49 @@ export class DashboardComponent {
     return this.totalIncome - this.totalExpense;
   }
 
+  progress = computed<ProgressData | null>(() => {
+    const goals = this.transactionService.getGoals();
+    if (!goals) return null;
+
+    const currentFilter = this.filter();
+    if (currentFilter === 'year') return null;
+
+    const transactions = this.filteredTransactions();
+    const actualIncome = transactions
+      .filter((t) => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    let target: number;
+    let label: string;
+    switch (currentFilter) {
+      case 'day':
+        target = goals.dailyGross;
+        label = 'Diária';
+        break;
+      case 'week':
+        target = goals.weeklyGross;
+        label = 'Semanal';
+        break;
+      case 'month':
+        target = goals.monthlyGross;
+        label = 'Mensal';
+        break;
+      default:
+        return null;
+    }
+
+    if (target <= 0) return null;
+
+    const percentage = (actualIncome / target) * 100;
+    return {
+      current: actualIncome,
+      target,
+      percentage,
+      barWidth: Math.min(percentage, 100),
+      label,
+    };
+  });
+
   setFilter(filter: TransactionFilter): void {
     this.filter.set(filter);
     this.customDate.set('');
@@ -79,5 +131,11 @@ export class DashboardComponent {
   formatDate(dateStr: string): string {
     const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('pt-BR');
+  }
+
+  progressBarColor(pct: number): string {
+    if (pct >= 100) return 'bg-income';
+    if (pct >= 50) return 'bg-[#3B82F6]';
+    return 'bg-alert';
   }
 }

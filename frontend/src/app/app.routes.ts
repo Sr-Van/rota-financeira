@@ -10,6 +10,7 @@ export const routes: Routes = [
     ],
   },
   { path: 'costs', loadComponent: () => import('./features/costs/costs.component').then(m => m.CostsComponent)},
+  { path: 'goals', loadComponent: () => import('./features/goals/goals.component').then(m => m.GoalsComponent) },
   { path: 'entry', loadComponent: () => import('./features/entry-form/entry-form.component').then(m => m.EntryFormComponent) },
   { path: '**', redirectTo: 'dashboard' },
 ];
