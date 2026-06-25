@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import { TransactionService } from '../../core/services/transaction.service';
+import { SettingsService } from '../../core/services/settings.service';
+import { CostCalculationService } from '../../core/services/cost-calculation.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import {
   DriverConfig,
@@ -20,7 +21,8 @@ import {
 })
 export class CostsComponent {
   private fb = inject(FormBuilder);
-  private transactionService = inject(TransactionService);
+  private settingsService = inject(SettingsService);
+  private costCalculation = inject(CostCalculationService);
   private toastService = inject(ToastService);
 
   form: FormGroup;
@@ -39,7 +41,7 @@ export class CostsComponent {
   };
 
   constructor() {
-    const saved = this.transactionService.getConfig();
+    const saved = this.settingsService.getConfig();
     const vehicleType: VehicleType = saved?.vehicleType ?? 'combustion';
 
     this.form = this.fb.group({
@@ -156,17 +158,17 @@ export class CostsComponent {
   }
 
   private calculateResults(config: DriverConfig): void {
-    this.dailyCosts = this.transactionService.calculateDailyCosts(config);
-    this.fixedCostPerKm = this.transactionService.calculateFixedCostPerKm(config);
-    this.variableCostsPerKm = this.transactionService.calculateVariableCostsPerKm(config);
-    this.combinedCosts = this.transactionService.calculateCombinedCosts(this.fixedCostPerKm, this.variableCostsPerKm);
+    this.dailyCosts = this.costCalculation.calculateDailyCosts(config);
+    this.fixedCostPerKm = this.costCalculation.calculateFixedCostPerKm(config);
+    this.variableCostsPerKm = this.costCalculation.calculateVariableCostsPerKm(config);
+    this.combinedCosts = this.costCalculation.calculateCombinedCosts(this.fixedCostPerKm, this.variableCostsPerKm);
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
 
     const config = this.buildConfig();
-    this.transactionService.saveConfig(config);
+    this.settingsService.saveConfig(config);
     this.toastService.show('Configuracoes salvas com sucesso.');
   }
 
@@ -174,8 +176,8 @@ export class CostsComponent {
     if (!this.combinedCosts) return;
 
     const total = this.combinedCosts.totalCostPerKm;
-    this.minimumGainPerKm = this.transactionService.calculateMinimumGainPerKm(total);
-    this.idealGainPerKm = this.transactionService.calculateIdealGainPerKm(total);
+    this.minimumGainPerKm = this.costCalculation.calculateMinimumGainPerKm(total);
+    this.idealGainPerKm = this.costCalculation.calculateIdealGainPerKm(total);
     this.showResults = true;
   }
 

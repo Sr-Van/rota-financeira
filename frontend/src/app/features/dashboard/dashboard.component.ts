@@ -1,9 +1,9 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { TransactionService } from '../../core/services/transaction.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Transaction, TransactionFilter } from '../../models/transaction.type';
-import { Goals } from '../../models/goals.type';
 
 interface ProgressData {
   current: number;
@@ -16,11 +16,12 @@ interface ProgressData {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
   private transactionService = inject(TransactionService);
+  private settingsService = inject(SettingsService);
   private toastService = inject(ToastService);
 
   filter = signal<TransactionFilter>('day');
@@ -56,7 +57,7 @@ export class DashboardComponent {
   }
 
   progress = computed<ProgressData | null>(() => {
-    const goals = this.transactionService.getGoals();
+    const goals = this.settingsService.getGoals();
     if (!goals) return null;
 
     const currentFilter = this.filter();

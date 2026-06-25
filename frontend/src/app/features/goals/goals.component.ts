@@ -2,7 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, takeUntil, debounceTime } from 'rxjs';
-import { TransactionService } from '../../core/services/transaction.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { Goals } from '../../models/goals.type';
 
 @Component({
@@ -13,7 +13,7 @@ import { Goals } from '../../models/goals.type';
 })
 export class GoalsComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
-  private transactionService = inject(TransactionService);
+  private settingsService = inject(SettingsService);
   private destroy$ = new Subject<void>();
 
   daysWorked = 0;
@@ -26,10 +26,10 @@ export class GoalsComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    const config = this.transactionService.getConfig();
+    const config = this.settingsService.getConfig();
     this.daysWorked = config?.daysWorked ?? 0;
 
-    const goals = this.transactionService.getGoals();
+    const goals = this.settingsService.getGoals();
     if (goals) {
       this.form.patchValue({ dailyGross: goals.dailyGross });
       this.calculateDerived(goals.dailyGross);
@@ -61,7 +61,7 @@ export class GoalsComponent implements OnInit, OnDestroy {
       weeklyGross: this.weeklyGross,
       monthlyGross: this.monthlyGross,
     };
-    this.transactionService.saveGoals(goals);
+    this.settingsService.saveGoals(goals);
     this.saved = true;
     setTimeout(() => (this.saved = false), 2000);
   }

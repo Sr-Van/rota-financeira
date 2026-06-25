@@ -2,6 +2,9 @@ import { Component, inject, Input, booleanAttribute } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { TransactionService } from '../../core/services/transaction.service';
+import { SettingsService } from '../../core/services/settings.service';
+import { CostCalculationService } from '../../core/services/cost-calculation.service';
+import { DailyCloseService } from '../../core/services/daily-close.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Router, RouterLink } from '@angular/router';
 import { DailyCosts } from '../../models/driver-config.type';
@@ -15,6 +18,9 @@ import { DailyCosts } from '../../models/driver-config.type';
 export class EntryFormComponent {
   @Input({ transform: booleanAttribute }) embedded = false;
 
+  private settingsService = inject(SettingsService);
+  private costCalculation = inject(CostCalculationService);
+  private dailyCloseService = inject(DailyCloseService);
   private toastService = inject(ToastService);
   private router = inject(Router);
 
@@ -45,14 +51,14 @@ export class EntryFormComponent {
   }
 
   private loadFixedCosts(): void {
-    const config = this.transactionService.getConfig();
+    const config = this.settingsService.getConfig();
     if (!config) {
       this.hasConfig = false;
       return;
     }
 
     this.hasConfig = true;
-    this.dailyFixedCosts = this.transactionService.calculateDailyCosts(config);
+    this.dailyFixedCosts = this.costCalculation.calculateDailyCosts(config);
 
     const fmt = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     this.form.patchValue({
@@ -83,7 +89,7 @@ export class EntryFormComponent {
       this.transactionService.add('expense', 'Custo Fixo - IPVA', this.dailyFixedCosts.dailyIpva, date);
     }
 
-    this.transactionService.saveDailyClose({
+    this.dailyCloseService.save({
       date,
       kmDriven,
       hoursWorked,
