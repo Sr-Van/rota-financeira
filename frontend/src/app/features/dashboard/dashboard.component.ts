@@ -8,6 +8,17 @@ import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.
 import { DailyClose, DailyCloseFilter } from '../../models/transaction.type';
 import { getWeekStart, formatWeekRange, formatMonthLabel } from '../../core/utils/date.utils';
 
+interface OperationalMetrics {
+  totalKm: number;
+  totalHours: number;
+  totalRides: number;
+  incomePerKm: number;
+  incomePerHour: number;
+  incomePerRide: number;
+  costPercent: number;
+  profitPercent: number;
+}
+
 interface ProgressData {
   current: number;
   target: number;
@@ -45,6 +56,25 @@ export class DashboardComponent {
   filter = signal<DailyCloseFilter>('day');
   referenceDate = signal<string>('');
   pendingDelete = signal<DisplayEntry | null>(null);
+
+  metrics = computed<OperationalMetrics>(() => {
+    const closes = this.filteredCloses();
+    const totalKm = closes.reduce((s, d) => s + d.kmDriven, 0);
+    const totalHours = closes.reduce((s, d) => s + d.hoursWorked, 0);
+    const totalRides = closes.reduce((s, d) => s + d.rideCount, 0);
+    const income = this.totalIncome;
+    const expense = this.totalExpense;
+    return {
+      totalKm,
+      totalHours,
+      totalRides,
+      incomePerKm: totalKm > 0 ? income / totalKm : 0,
+      incomePerHour: totalHours > 0 ? income / totalHours : 0,
+      incomePerRide: totalRides > 0 ? income / totalRides : 0,
+      costPercent: income > 0 ? (expense / income) * 100 : 0,
+      profitPercent: income > 0 ? ((income - expense) / income) * 100 : 0,
+    };
+  });
 
   private filteredCloses = computed(() => {
     const ref = this.referenceDate();
