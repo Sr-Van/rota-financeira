@@ -1,4 +1,5 @@
 *.md
+.env
 
 # Python / FastAPI
 backend/__pycache__/

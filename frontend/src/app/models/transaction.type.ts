@@ -1,21 +1,13 @@
-export type TransactionType = 'income' | 'expense';
-export type TransactionFilter = 'day' | 'week' | 'month' | 'year';
-
-export interface Transaction {
-  id: string;
-  type: TransactionType;
-  description: string;
-  amount: number;
-  date: string;
-  createdAt: string;
-}
+export type DailyCloseFilter = 'day' | 'week' | 'month' | 'year';
 
 export interface DailyClose {
   id: string;
   date: string;
+  totalEarnings: number;
   kmDriven: number;
   hoursWorked: number;
   rideCount: number;
+  fuelCost: number;
   vehicleConsumption: number;
   createdAt: string;
 }

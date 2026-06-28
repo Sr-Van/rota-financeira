@@ -1,7 +1,6 @@
 import { Component, inject, Input, booleanAttribute } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import { TransactionService } from '../../core/services/transaction.service';
 import { SettingsService } from '../../core/services/settings.service';
 import { CostCalculationService } from '../../core/services/cost-calculation.service';
 import { DailyCloseService } from '../../core/services/daily-close.service';
@@ -32,7 +31,6 @@ export class EntryFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private transactionService: TransactionService,
   ) {
     this.form = this.fb.group({
       date: [this.today, [Validators.required]],
@@ -80,21 +78,13 @@ export class EntryFormComponent {
     const rideCount = parseFloat(raw.rideCount ?? '0');
     const vehicleConsumption = parseFloat(raw.vehicleConsumption ?? '0');
 
-    const totalFuelCost = kmDriven / vehicleConsumption * fuelCost;
-    this.transactionService.add('income', `Faturamento Diario - ${date}`, totalEarnings, date);
-    this.transactionService.add('expense', `Combustivel/Energia Diario - ${date}`, totalFuelCost, date);
-
-    if (this.hasConfig && this.dailyFixedCosts) {
-      this.transactionService.add('expense', 'Custo Fixo - Parcela Veiculo', this.dailyFixedCosts.dailyInstallment, date);
-      this.transactionService.add('expense', 'Custo Fixo - Seguro', this.dailyFixedCosts.dailyInsurance, date);
-      this.transactionService.add('expense', 'Custo Fixo - IPVA', this.dailyFixedCosts.dailyIpva, date);
-    }
-
     this.dailyCloseService.save({
       date,
+      totalEarnings,
       kmDriven,
       hoursWorked,
       rideCount,
+      fuelCost,
       vehicleConsumption,
     });
 

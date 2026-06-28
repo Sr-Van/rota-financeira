@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { TransactionService } from '../../core/services/transaction.service';
+import { DailyCloseService } from '../../core/services/daily-close.service';
 
 const mockLocalStorage = {
   _data: {} as Record<string, string>,
@@ -28,7 +28,7 @@ Object.defineProperty(globalThis, 'localStorage', {
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
-  let transactionService: TransactionService;
+  let dailyCloseService: DailyCloseService;
 
   beforeEach(async () => {
     mockLocalStorage.clear();
@@ -39,7 +39,7 @@ describe('DashboardComponent', () => {
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
-    transactionService = TestBed.inject(TransactionService);
+    dailyCloseService = TestBed.inject(DailyCloseService);
     fixture.detectChanges();
   });
 
@@ -47,8 +47,8 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show empty transactions initially', () => {
-    expect(component.transactions).toHaveLength(0);
+  it('should show empty entries initially', () => {
+    expect(component.entries).toHaveLength(0);
   });
 
   it('should show zero totals initially', () => {
@@ -57,26 +57,43 @@ describe('DashboardComponent', () => {
     expect(component.balance).toBe(0);
   });
 
-  it('should reflect transactions from service', () => {
+  it('should show exploded entries from daily close', () => {
     const today = new Date().toISOString().split('T')[0];
-    transactionService.add('income', 'Corrida A', 100, today);
-    transactionService.add('expense', 'Gasolina', 50, today);
+    dailyCloseService.save({
+      date: today,
+      totalEarnings: 100,
+      kmDriven: 50,
+      hoursWorked: 5,
+      rideCount: 8,
+      fuelCost: 5,
+      vehicleConsumption: 10,
+    });
     fixture.detectChanges();
 
-    expect(component.transactions).toHaveLength(2);
-    expect(component.totalIncome).toBe(100);
-    expect(component.totalExpense).toBe(50);
-    expect(component.balance).toBe(50);
+    expect(component.entries.length).toBeGreaterThanOrEqual(2);
+    const incomeEntry = component.entries.find((e) => e.type === 'income');
+    expect(incomeEntry).toBeDefined();
+    expect(incomeEntry!.amount).toBe(100);
+    expect(incomeEntry!.description).toBe('Faturamento');
   });
 
-  it('should delete transaction when called', () => {
+  it('should delete daily close when entry is deleted', () => {
     const today = new Date().toISOString().split('T')[0];
-    transactionService.add('income', 'Corrida', 30, today);
-    const id = transactionService.getAll()[0].id;
-    component.deleteTransaction(id);
+    dailyCloseService.save({
+      date: today,
+      totalEarnings: 100,
+      kmDriven: 50,
+      hoursWorked: 5,
+      rideCount: 8,
+      fuelCost: 5,
+      vehicleConsumption: 10,
+    });
+    const entry = component.entries[0];
+    component.confirmDelete(entry);
+    component.executeDelete();
     fixture.detectChanges();
 
-    expect(component.transactions).toHaveLength(0);
+    expect(component.entries).toHaveLength(0);
   });
 
   it('should format currency in BRL', () => {

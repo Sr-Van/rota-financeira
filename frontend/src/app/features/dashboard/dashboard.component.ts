@@ -1,9 +1,11 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { TransactionService } from '../../core/services/transaction.service';
+import { DailyCloseService } from '../../core/services/daily-close.service';
 import { SettingsService } from '../../core/services/settings.service';
+import { CostCalculationService } from '../../core/services/cost-calculation.service';
 import { ToastService } from '../../shared/toast/toast.service';
-import { Transaction, TransactionFilter } from '../../models/transaction.type';
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { DailyClose, DailyCloseFilter } from '../../models/transaction.type';
 import { getWeekStart, formatWeekRange, formatMonthLabel } from '../../core/utils/date.utils';
 
 interface ProgressData {
@@ -19,43 +21,111 @@ interface SelectOption {
   label: string;
 }
 
+interface DisplayEntry {
+  id: string;
+  date: string;
+  type: 'income' | 'expense';
+  description: string;
+  amount: number;
+  closeId: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, ConfirmModalComponent],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
-  private transactionService = inject(TransactionService);
+  private dailyCloseService = inject(DailyCloseService);
   private settingsService = inject(SettingsService);
+  private costCalculation = inject(CostCalculationService);
   private toastService = inject(ToastService);
 
-  filter = signal<TransactionFilter>('day');
+  filter = signal<DailyCloseFilter>('day');
   referenceDate = signal<string>('');
+  pendingDelete = signal<DisplayEntry | null>(null);
 
-  private filteredTransactions = computed(() => {
+  private filteredCloses = computed(() => {
     const ref = this.referenceDate();
     if (ref) {
-      return this.transactionService.getByFilter(this.filter(), ref);
+      return this.dailyCloseService.getByFilter(this.filter(), ref);
     }
     const today = new Date().toISOString().split('T')[0];
-    return this.transactionService.getByFilter(this.filter(), today);
+    return this.dailyCloseService.getByFilter(this.filter(), today);
   });
 
-  get transactions(): Transaction[] {
-    return this.filteredTransactions();
+  private displayEntries = computed<DisplayEntry[]>(() => {
+    const config = this.settingsService.getConfig();
+    const dailyCosts = config ? this.costCalculation.calculateDailyCosts(config) : null;
+
+    const entries: DisplayEntry[] = [];
+    for (const dc of this.filteredCloses()) {
+      entries.push({
+        id: `income-${dc.id}`,
+        date: dc.date,
+        type: 'income',
+        description: 'Faturamento',
+        amount: dc.totalEarnings,
+        closeId: dc.id,
+      });
+
+      const fuelAmount = dc.kmDriven / dc.vehicleConsumption * dc.fuelCost;
+      entries.push({
+        id: `fuel-${dc.id}`,
+        date: dc.date,
+        type: 'expense',
+        description: 'Combustivel/Energia',
+        amount: fuelAmount,
+        closeId: dc.id,
+      });
+
+      if (dailyCosts) {
+        entries.push(
+          {
+            id: `installment-${dc.id}`,
+            date: dc.date,
+            type: 'expense',
+            description: 'Custo Fixo - Parcela Veiculo',
+            amount: dailyCosts.dailyInstallment,
+            closeId: dc.id,
+          },
+          {
+            id: `insurance-${dc.id}`,
+            date: dc.date,
+            type: 'expense',
+            description: 'Custo Fixo - Seguro',
+            amount: dailyCosts.dailyInsurance,
+            closeId: dc.id,
+          },
+          {
+            id: `ipva-${dc.id}`,
+            date: dc.date,
+            type: 'expense',
+            description: 'Custo Fixo - IPVA',
+            amount: dailyCosts.dailyIpva,
+            closeId: dc.id,
+          },
+        );
+      }
+    }
+    return entries;
+  });
+
+  get entries(): DisplayEntry[] {
+    return this.displayEntries();
   }
 
   get totalIncome(): number {
-    return this.filteredTransactions()
-      .filter((t) => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
+    return this.displayEntries()
+      .filter((e) => e.type === 'income')
+      .reduce((sum, e) => sum + e.amount, 0);
   }
 
   get totalExpense(): number {
-    return this.filteredTransactions()
-      .filter((t) => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
+    return this.displayEntries()
+      .filter((e) => e.type === 'expense')
+      .reduce((sum, e) => sum + e.amount, 0);
   }
 
   get balance(): number {
@@ -64,8 +134,8 @@ export class DashboardComponent {
 
   availableWeeks = computed<SelectOption[]>(() => {
     const weeks = new Map<string, number>();
-    for (const t of this.transactionService.getAll()) {
-      const ws = getWeekStart(t.date);
+    for (const d of this.dailyCloseService.getAll()) {
+      const ws = getWeekStart(d.date);
       if (!weeks.has(ws)) {
         weeks.set(ws, new Date(ws + 'T00:00:00').getTime());
       }
@@ -82,8 +152,8 @@ export class DashboardComponent {
 
   availableMonths = computed<SelectOption[]>(() => {
     const months = new Map<string, number>();
-    for (const t of this.transactionService.getAll()) {
-      const m = t.date.substring(0, 7);
+    for (const d of this.dailyCloseService.getAll()) {
+      const m = d.date.substring(0, 7);
       if (!months.has(m)) {
         months.set(m, new Date(m + '-01').getTime());
       }
@@ -104,10 +174,9 @@ export class DashboardComponent {
     const currentFilter = this.filter();
     if (currentFilter === 'year') return null;
 
-    const transactions = this.filteredTransactions();
-    const actualIncome = transactions
-      .filter((t) => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
+    const actualIncome = this.displayEntries()
+      .filter((e) => e.type === 'income')
+      .reduce((sum, e) => sum + e.amount, 0);
 
     let target: number;
     let label: string;
@@ -140,7 +209,7 @@ export class DashboardComponent {
     };
   });
 
-  setFilter(filter: TransactionFilter): void {
+  setFilter(filter: DailyCloseFilter): void {
     this.filter.set(filter);
     const today = new Date().toISOString().split('T')[0];
     switch (filter) {
@@ -170,9 +239,20 @@ export class DashboardComponent {
     this.referenceDate.set(value);
   }
 
-  deleteTransaction(id: string): void {
-    this.transactionService.delete(id);
-    this.toastService.show('Transacao excluida com sucesso.');
+  confirmDelete(entry: DisplayEntry): void {
+    this.pendingDelete.set(entry);
+  }
+
+  executeDelete(): void {
+    const entry = this.pendingDelete();
+    if (!entry) return;
+    this.dailyCloseService.delete(entry.closeId);
+    this.pendingDelete.set(null);
+    this.toastService.show('Fechamento excluido com sucesso.');
+  }
+
+  cancelDelete(): void {
+    this.pendingDelete.set(null);
   }
 
   formatCurrency(value: number): string {

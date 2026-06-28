@@ -1,35 +1,25 @@
 import { Injectable } from '@angular/core';
 import { DriverConfig } from '../../models/driver-config.type';
 import { Goals } from '../../models/goals.type';
+import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  private readonly CONFIG_KEY = 'rota-financeira-driver-config';
-  private readonly GOALS_KEY = 'rota-financeira-goals';
+  constructor(private api: ApiService) {}
 
   saveConfig(config: DriverConfig): void {
-    localStorage.setItem(this.CONFIG_KEY, JSON.stringify(config));
+    this.api.saveConfig(config);
   }
 
   getConfig(): DriverConfig | null {
-    try {
-      const data = localStorage.getItem(this.CONFIG_KEY);
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
-    }
+    return this.api.getConfig();
   }
 
   saveGoals(goals: Goals): void {
-    localStorage.setItem(this.GOALS_KEY, JSON.stringify(goals));
+    this.api.saveGoals(goals);
   }
 
   getGoals(): Goals | null {
-    try {
-      const data = localStorage.getItem(this.GOALS_KEY);
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
-    }
+    return this.api.getGoals();
   }
 }
